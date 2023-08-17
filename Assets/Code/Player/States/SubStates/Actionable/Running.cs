@@ -13,13 +13,13 @@ namespace Code.Player.States.SubStates.Actionable
 
         public override void OnHoldMovementInput(Vector2 direction)
         {
-            m_playerPhysics.velocity = (direction * Vector2.right /* Keeps X value, removes Y value */).normalized * m_data._MoveSpeed;
+            m_playerPhysics.velocity = direction.normalized * m_data._MoveSpeed;
         }
 
         public override void OnReceiveButtonInput(InputButton button)
         {
             base.OnReceiveButtonInput(button);
-      //      if (button == InputButton.DASH) m_stateMachine.ChangeState(m_stateMachine._Jumping);
+            if (button == InputButton.DASH) m_stateMachine.ChangeState(m_stateMachine._Dash);
         }
 
         public override void OnReleaseMovementInput()

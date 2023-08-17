@@ -16,12 +16,6 @@ namespace Code.Player.States.SubStates.Actionable
             m_stateMachine.ChangeState(m_stateMachine._Running);
         }
 
-        public override void OnHoldMovementInput(Vector2 direction)
-        {
-            base.OnHoldMovementInput(direction);
-            OnReceiveMovementInput(direction);
-        }
-
         public override void OnReceiveButtonInput(InputButton button)
         {
             if (button == InputButton.DASH)

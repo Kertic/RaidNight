@@ -8,12 +8,7 @@ namespace Code.Player
         private float moveSpeed;
 
         [SerializeField]
-        private float dashVector;
-
-        [SerializeField]
         private float attackSpeed;
-
-
 
         public float _MoveSpeed
         {
@@ -21,18 +16,10 @@ namespace Code.Player
             private set => moveSpeed = value;
         }
 
-        public float _JumpHeight
-        {
-            get => dashVector;
-            private set => dashVector = value;
-        }
-
-        public float _BreakSpeed
+        public float _AttackSpeed
         {
             get => attackSpeed;
             private set => attackSpeed = value;
         }
-
-
     }
 }

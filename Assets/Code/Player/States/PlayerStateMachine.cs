@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Data.Common;
 using Code.Player.States.SubStates.Actionable;
+using Code.Player.States.SubStates.UseSkill;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,13 +10,15 @@ namespace Code.Player.States
     [RequireComponent(typeof(PlayerData), typeof(PlayerPhysics))]
     public class PlayerStateMachine : MonoBehaviour
     {
+        private static Controls _controls;
+        private static Dictionary<InputAction, PlayerState.InputButton> _inputCallbacks;
+        
         private PlayerState _currentState;
-        private Controls _controls;
         public PlayerData _PlayerData { get; private set; }
         public PlayerPhysics _PlayerPhysics { get; private set; }
         public Idle _Idle { get; private set; }
         public Running _Running { get; private set; }
-        public Running _Running2 { get; private set; }
+        public Dash _Dash { get; private set; }
 
         private void Awake()
         {
@@ -22,17 +26,23 @@ namespace Code.Player.States
             _PlayerPhysics = GetComponent<PlayerPhysics>();
             _Idle = new Idle(_PlayerData, _PlayerPhysics, this);
             _Running = new Running(_PlayerData, _PlayerPhysics, this);
-            _Running2 = new Running(_PlayerData, _PlayerPhysics, this);
+            _Dash = new Dash(_PlayerData, _PlayerPhysics, this);
             _controls = new Controls();
+            _inputCallbacks = new Dictionary<InputAction, PlayerState.InputButton>
+            {
+                { _controls.Gameplay.PrimaryFire, PlayerState.InputButton.PRIMARY },
+                { _controls.Gameplay.SecondaryFire, PlayerState.InputButton.PRIMARY },
+                { _controls.Gameplay.Dash, PlayerState.InputButton.DASH },
+                { _controls.Gameplay.Ultimate, PlayerState.InputButton.ULTIMATE },
+            };
             _controls.Gameplay.Movement.performed += OnMovementInput;
-            _controls.Gameplay.Dash.performed += PressJumpInput;
-            _controls.Gameplay.PrimaryFire.performed += (InputAction.CallbackContext context) => { PressAttackInput(true, context); };
-            _controls.Gameplay.SecondaryFire.performed += (InputAction.CallbackContext context) => { PressAttackInput(false, context); };
-
             _controls.Gameplay.Movement.canceled += OnMovementInputEnd;
-            _controls.Gameplay.Dash.canceled += ReleaseJumpInput;
-            _controls.Gameplay.PrimaryFire.canceled += (InputAction.CallbackContext context) => { ReleaseFireInput(true, context); };
-            _controls.Gameplay.SecondaryFire.canceled += (InputAction.CallbackContext context) => { ReleaseFireInput(false, context); };
+
+            foreach (KeyValuePair<InputAction, PlayerState.InputButton> action in _inputCallbacks)
+            {
+                action.Key.performed += (InputAction.CallbackContext context) => { _currentState.OnReceiveButtonInput(action.Value); };
+                action.Key.canceled += (InputAction.CallbackContext context) => { _currentState.OnReleaseButtonInput(action.Value); };
+            }
         }
 
         private void OnEnable()
@@ -50,38 +60,6 @@ namespace Code.Player.States
             _currentState.OnStateEnter();
         }
 
-        private void PressAttackInput(bool isPrimary, InputAction.CallbackContext context)
-        {
-            if (isPrimary)
-            {
-                _currentState.OnReceiveButtonInput(PlayerState.InputButton.PRIMARY);
-                return;
-            }
-
-            _currentState.OnReceiveButtonInput(PlayerState.InputButton.SECONDARY);
-        }
-
-        private void ReleaseFireInput(bool isPrimary, InputAction.CallbackContext context)
-        {
-            if (isPrimary)
-            {
-                _currentState.OnReleaseButtonInput(PlayerState.InputButton.PRIMARY);
-                return;
-            }
-
-            _currentState.OnReleaseButtonInput(PlayerState.InputButton.SECONDARY);
-        }
-
-        private void PressJumpInput(InputAction.CallbackContext context)
-        {
-            _currentState.OnReceiveButtonInput(PlayerState.InputButton.DASH);
-        }
-
-        private void ReleaseJumpInput(InputAction.CallbackContext context)
-        {
-            _currentState.OnReleaseButtonInput(PlayerState.InputButton.DASH);
-        }
-        
 
         private void OnMovementInput(InputAction.CallbackContext context)
         {
@@ -99,10 +77,11 @@ namespace Code.Player.States
             Vector2 movementInputVector = _controls.Gameplay.Movement.ReadValue<Vector2>();
             if (_controls.Gameplay.Movement.IsPressed())
                 _currentState.OnHoldMovementInput(movementInputVector);
-            if (_controls.Gameplay.PrimaryFire.IsPressed())
-                _currentState.OnHoldButtonInput(PlayerState.InputButton.PRIMARY);
-            if (_controls.Gameplay.SecondaryFire.IsPressed())
-                _currentState.OnHoldButtonInput(PlayerState.InputButton.SECONDARY);
+            foreach (KeyValuePair<InputAction, PlayerState.InputButton> action in _inputCallbacks)
+            {
+                if (action.Key.IsPressed())
+                    _currentState.OnHoldButtonInput(action.Value);
+            }
         }
 
         public void ChangeState(PlayerState newState)

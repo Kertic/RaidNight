@@ -6,7 +6,6 @@ namespace Code.Player
     public class PlayerPhysics : MonoBehaviour
     {
         public BoxCollider2D _HitboxCollider2D { get; private set; }
-        public BoxCollider2D _GroundedCollider2D { get; private set; }
         public Rigidbody2D _Rigidbody2D { get; private set; }
         public Vector2 velocity;
 

@@ -10,7 +10,6 @@ namespace Code.Player.States
             DASH,
             PRIMARY,
             SECONDARY,
-            INTERRUPT,
             ULTIMATE,
             NUMOFINPUTBUTTONS
         }

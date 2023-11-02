@@ -1,15 +1,17 @@
+using System;
 using UnityEngine;
 
 namespace Code.Player.States.SuperStates
 {
     public abstract class Actionable : PlayerState
     {
-
         public override void OnStateExit() { }
+
         public override void OnReceiveMovementInput(Vector2 direction) { }
-        public override void OnReceiveButtonInput(InputButton button) { }
 
         public override void OnHoldMovementInput(Vector2 direction) { }
+
+        public override void OnReceiveButtonInput(InputButton button) { }
 
         public override void OnHoldButtonInput(InputButton button) { }
 

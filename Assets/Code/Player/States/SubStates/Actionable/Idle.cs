@@ -8,15 +8,13 @@ namespace Code.Player.States.SubStates.Actionable
         public override void OnReceiveMovementInput(Vector2 direction)
         {
             base.OnReceiveMovementInput(direction);
-            m_stateMachine.ChangeToRunningState();
+            OnHoldMovementInput(direction);
         }
 
-        public override void OnReceiveButtonInput(InputButton button)
+        public override void OnHoldMovementInput(Vector2 direction)
         {
-            if (button == InputButton.DASH)
-            {
-//                m_stateMachine.ChangeState(m_stateMachine.);
-            }
+            base.OnHoldMovementInput(direction);
+            m_stateMachine.ChangeToRunningState();
         }
 
         public Idle(PlayerData data, PlayerPhysics playerPhysics, PlayerStateMachine stateMachine) : base(data, playerPhysics, stateMachine) { }

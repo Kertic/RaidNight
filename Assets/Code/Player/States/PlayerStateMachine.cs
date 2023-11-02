@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Data.Common;
+using Code.Camera;
 using Code.Player.States.SubStates.Actionable;
 using Code.Player.States.SubStates.UseSkill;
 using UnityEngine;
@@ -13,6 +14,8 @@ namespace Code.Player.States
         private static Controls _controls;
         private static Dictionary<InputAction, PlayerState.InputButton> _inputCallbacks;
 
+        [SerializeField]
+        private PlayerCam cam;
         private PlayerState _currentState;
         public PlayerData _PlayerData { get; private set; }
         public PlayerPhysics _PlayerPhysics { get; private set; }
@@ -37,6 +40,7 @@ namespace Code.Player.States
             };
             _controls.Gameplay.Movement.performed += OnMovementInput;
             _controls.Gameplay.Movement.canceled += OnMovementInputEnd;
+            _controls.Gameplay.Zoom.performed += cam.ZoomDistance;
 
             foreach (KeyValuePair<InputAction, PlayerState.InputButton> action in _inputCallbacks)
             {
@@ -122,8 +126,9 @@ namespace Code.Player.States
             ChangeState(_Idle);
         }
 
-        public void ChangeToDashingState()
+        public void ChangeToDashingState(Vector2 dashVector, float dashDuration)
         {
+            _Dash.SetDashVectorAndDuration(dashVector, dashDuration);
             ChangeState(_Dash);
         }
     }

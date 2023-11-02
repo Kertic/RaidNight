@@ -6,8 +6,6 @@ namespace Code.Camera
 {
     public class PlayerCam : MonoBehaviour
     {
-        private static Controls _controls;
-
         [SerializeField]
         private Transform player;
 
@@ -17,28 +15,18 @@ namespace Code.Camera
         [SerializeField]
         private float lerpPace;
 
-        private void Awake()
+        public void ZoomDistance(InputAction.CallbackContext context)
         {
-            _controls = new Controls();
-            _controls.Gameplay.Zoom.performed += ZoomDistance;
-        }
-
-        private void Update()
-        {
-            
-        }
-
-        private void ZoomDistance(InputAction.CallbackContext context)
-        {
-            Debug.Log(context);
+            Vector2 direction = context.ReadValue<Vector2>();
+            transform.position = (Vector3.forward * direction.y) + transform.position;
         }
 
         void FixedUpdate()
         {
             Vector3 position = transform.position;
-            Vector3 deltalerp = Vector3.Lerp(position, player.position, Time.deltaTime * lerpPace);
-            deltalerp.z = position.z; // Don't change the Z
-            position = deltalerp;
+            Vector3 deltaLerp = Vector3.Lerp(position, player.position, Time.deltaTime * lerpPace);
+            deltaLerp.z = position.z; // Don't change the Z
+            position = deltaLerp;
             transform.position = position;
         }
     }

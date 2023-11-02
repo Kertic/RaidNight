@@ -10,6 +10,9 @@ namespace Code.Player
         [SerializeField]
         private float attackSpeed;
 
+        [SerializeField]
+        private float dashDuration;
+
         public float _MoveSpeed
         {
             get => moveSpeed;
@@ -20,6 +23,12 @@ namespace Code.Player
         {
             get => attackSpeed;
             private set => attackSpeed = value;
+        }
+
+        public float _DashDuration
+        {
+            get => dashDuration;
+            private set => dashDuration = value;
         }
     }
 }

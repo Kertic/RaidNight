@@ -86,7 +86,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""type"": ""Value"",
                     ""id"": ""1e755e1e-cc15-45bb-b768-75f1a7ceaae5"",
                     ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
+                    ""processors"": ""NormalizeVector2"",
                     ""interactions"": """",
                     ""initialStateCheck"": true
                 }
@@ -206,7 +206,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""name"": ""2D Vector"",
                     ""id"": ""faf2b6aa-c93f-4546-97eb-98ba9b058e2c"",
                     ""path"": ""2DVector"",
-                    ""interactions"": """",
+                    ""interactions"": ""Press"",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Zoom"",

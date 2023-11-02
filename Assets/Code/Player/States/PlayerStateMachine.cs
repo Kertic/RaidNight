@@ -12,7 +12,7 @@ namespace Code.Player.States
     {
         private static Controls _controls;
         private static Dictionary<InputAction, PlayerState.InputButton> _inputCallbacks;
-        
+
         private PlayerState _currentState;
         public PlayerData _PlayerData { get; private set; }
         public PlayerPhysics _PlayerPhysics { get; private set; }
@@ -24,7 +24,7 @@ namespace Code.Player.States
         {
             _PlayerData = GetComponent<PlayerData>();
             _PlayerPhysics = GetComponent<PlayerPhysics>();
-            _Idle = new Idle(_PlayerData, _PlayerPhysics, this);
+            _currentState = _Idle = new Idle(_PlayerData, _PlayerPhysics, this);
             _Running = new Running(_PlayerData, _PlayerPhysics, this);
             _Dash = new Dash(_PlayerData, _PlayerPhysics, this);
             _controls = new Controls();
@@ -84,12 +84,6 @@ namespace Code.Player.States
             }
         }
 
-        public void ChangeState(PlayerState newState)
-        {
-            _currentState.OnStateExit();
-            _currentState = newState;
-            _currentState.OnStateEnter();
-        }
 
         private void OnCollisionEnter2D(Collision2D other)
         {
@@ -109,6 +103,28 @@ namespace Code.Player.States
         private void FixedUpdate()
         {
             _currentState.PhysicsUpdate();
+        }
+
+        protected void ChangeState(PlayerState newState)
+        {
+            _currentState.OnStateExit();
+            _currentState = newState;
+            _currentState.OnStateEnter();
+        }
+
+        public void ChangeToRunningState()
+        {
+            ChangeState(_Running);
+        }
+
+        public void ChangeToIdleState()
+        {
+            ChangeState(_Idle);
+        }
+
+        public void ChangeToDashingState()
+        {
+            ChangeState(_Dash);
         }
     }
 }

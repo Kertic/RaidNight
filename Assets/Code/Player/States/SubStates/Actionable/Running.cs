@@ -5,6 +5,13 @@ namespace Code.Player.States.SubStates.Actionable
     public class Running : SuperStates.Actionable
     {
         public Running(PlayerData data, PlayerPhysics playerPhysics, PlayerStateMachine stateMachine) : base(data, playerPhysics, stateMachine) { }
+        private Vector2 lastMovementApplied;
+
+        public override void OnStateEnter()
+        {
+            base.OnStateEnter();
+            lastMovementApplied = Vector2.zero;
+        }
 
         public override void OnReceiveMovementInput(Vector2 direction)
         {
@@ -13,19 +20,29 @@ namespace Code.Player.States.SubStates.Actionable
 
         public override void OnHoldMovementInput(Vector2 direction)
         {
-            m_playerPhysics.velocity = direction.normalized * m_data._MoveSpeed;
+            base.OnHoldMovementInput(direction);
+            Vector2 newMovementApplication = direction.normalized * m_data._MoveSpeed;
+            if (lastMovementApplied == newMovementApplication)
+            {
+                return;
+            }
+
+            m_playerPhysics.RemoveContinuousForce(lastMovementApplied);
+            lastMovementApplied = newMovementApplication;
+            m_playerPhysics.AddContinuousForce(lastMovementApplied);
         }
 
         public override void OnReceiveButtonInput(InputButton button)
         {
             base.OnReceiveButtonInput(button);
-            if (button == InputButton.DASH) m_stateMachine.ChangeState(m_stateMachine._Dash);
+            if (button == InputButton.DASH && false /* Removing this logic branch for now */) m_stateMachine.ChangeToDashingState();
         }
 
         public override void OnReleaseMovementInput()
         {
             base.OnReleaseMovementInput();
-            m_stateMachine.ChangeState(m_stateMachine._Idle);
+            m_playerPhysics.RemoveContinuousForce(lastMovementApplied);
+            m_stateMachine.ChangeToIdleState();
         }
     }
 }

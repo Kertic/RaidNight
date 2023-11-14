@@ -4,33 +4,40 @@ using UnityEngine.Serialization;
 
 namespace Code.Player.Weapon
 {
-    [RequireComponent(typeof(Collider2D), typeof(Rigidbody2D))]
+    [RequireComponent(typeof(EntityPhysics))]
     public class Projectile : MonoBehaviour
     {
+        public Action ONHit;
 
-        private float _speed;
-        private Vector2 _travelDirection;
-        private Rigidbody2D _rigidbody2D;
+        private Weapon _firingWeapon;
+        private EntityPhysics _entityPhysics;
+        private Vector2 _continuousForce;
 
-        private void Start()
+        private void Awake()
         {
-            _rigidbody2D = GetComponent<Rigidbody2D>();
-        }
-
-        void FixedUpdate()
-        {
-            _rigidbody2D.MovePosition(_rigidbody2D.position + (_travelDirection.normalized * _speed));
+            _entityPhysics = GetComponent<EntityPhysics>();
         }
 
         private void OnCollisionEnter2D(Collision2D other)
         {
-            Debug.Log("Collided with: " + other.gameObject.name);
+            if (other.gameObject.CompareTag("Wall"))
+            {
+                Debug.Log("Collided with: " + other.gameObject.name);
+                ONHit();
+            }
         }
 
         public void FireProjectile(Vector2 newTravelDirection, float newSpeed)
         {
-            _travelDirection = newTravelDirection.normalized;
-            _speed = newSpeed;
+            _continuousForce = newTravelDirection.normalized * newSpeed;
+            _entityPhysics.AddContinuousForce(_continuousForce);
+            float angle = Mathf.Atan2(newTravelDirection.x, newTravelDirection.y) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        }
+
+        public void OnDisable()
+        {
+            _continuousForce = Vector2.zero;
         }
     }
 }

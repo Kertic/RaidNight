@@ -6,13 +6,13 @@ namespace Code.Player.StateMachines.PlayerControlStates
     public abstract class PlayerControlState : IState
     {
         protected PlayerData m_data;
-        protected PlayerPhysics m_playerPhysics;
+        protected EntityPhysics MEntityPhysics;
         protected PlayerControlsStateMachine m_controlsStateMachine;
 
-        public PlayerControlState(PlayerData data, PlayerPhysics playerPhysics, PlayerControlsStateMachine controlsStateMachine)
+        public PlayerControlState(PlayerData data, EntityPhysics entityPhysics, PlayerControlsStateMachine controlsStateMachine)
         {
             m_data = data;
-            m_playerPhysics = playerPhysics;
+            MEntityPhysics = entityPhysics;
             m_controlsStateMachine = controlsStateMachine;
         }
 

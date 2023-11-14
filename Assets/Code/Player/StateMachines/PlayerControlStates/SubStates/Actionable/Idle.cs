@@ -17,6 +17,6 @@ namespace Code.Player.StateMachines.PlayerControlStates.SubStates.Actionable
             m_controlsStateMachine.ChangeToRunningState();
         }
 
-        public Idle(PlayerData data, PlayerPhysics playerPhysics, PlayerControlsStateMachine controlsStateMachine) : base(data, playerPhysics, controlsStateMachine) { }
+        public Idle(PlayerData data, EntityPhysics entityPhysics, PlayerControlsStateMachine controlsStateMachine) : base(data, entityPhysics, controlsStateMachine) { }
     }
 }

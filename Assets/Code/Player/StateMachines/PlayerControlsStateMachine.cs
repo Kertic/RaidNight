@@ -9,7 +9,7 @@ using UnityEngine.InputSystem;
 
 namespace Code.Player.StateMachines
 {
-    [RequireComponent(typeof(PlayerData), typeof(PlayerPhysics))]
+    [RequireComponent(typeof(PlayerData), typeof(EntityPhysics))]
     public class PlayerControlsStateMachine : MonoBehaviour
     {
         public enum InputButton
@@ -28,8 +28,8 @@ namespace Code.Player.StateMachines
         private PlayerCam cam;
 
         private PlayerControlState _currentControlState;
-        public PlayerData _PlayerData { get; private set; }
-        public PlayerPhysics _PlayerPhysics { get; private set; }
+        public PlayerData PlayerData { get; private set; }
+        public EntityPhysics EntityPhysics { get; private set; }
         public Idle _Idle { get; private set; }
         public Running _Running { get; private set; }
         public Dash _Dash { get; private set; }
@@ -39,11 +39,11 @@ namespace Code.Player.StateMachines
 
         private void Awake()
         {
-            _PlayerData = GetComponent<PlayerData>();
-            _PlayerPhysics = GetComponent<PlayerPhysics>();
-            _currentControlState = _Idle = new Idle(_PlayerData, _PlayerPhysics, this);
-            _Running = new Running(_PlayerData, _PlayerPhysics, this);
-            _Dash = new Dash(_PlayerData, _PlayerPhysics, this);
+            PlayerData = GetComponent<PlayerData>();
+            EntityPhysics = GetComponent<EntityPhysics>();
+            _currentControlState = _Idle = new Idle(PlayerData, EntityPhysics, this);
+            _Running = new Running(PlayerData, EntityPhysics, this);
+            _Dash = new Dash(PlayerData, EntityPhysics, this);
             _controls = new Controls();
             _inputCallbacks = new Dictionary<InputAction, InputButton>
             {

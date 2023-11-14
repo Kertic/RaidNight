@@ -9,7 +9,7 @@ namespace Code.Player.StateMachines.PlayerControlStates.SubStates.UseSkill
         protected Vector2 m_dashVector;
         private bool _active;
 
-        public Dash(PlayerData data, PlayerPhysics playerPhysics, PlayerControlsStateMachine controlsStateMachine) : base(data, playerPhysics, controlsStateMachine) { }
+        public Dash(PlayerData data, EntityPhysics entityPhysics, PlayerControlsStateMachine controlsStateMachine) : base(data, entityPhysics, controlsStateMachine) { }
 
         public void SetDashVectorAndDuration(Vector2 dashVector, float dashDuration)
         {
@@ -20,7 +20,7 @@ namespace Code.Player.StateMachines.PlayerControlStates.SubStates.UseSkill
         {
             base.OnStateEnter();
             _active = true;
-            m_playerPhysics.AddBurstForce(new PlayerPhysics.BurstForce(m_dashVector, m_dashDuration), () =>
+            MEntityPhysics.AddBurstForce(new EntityPhysics.BurstForce(m_dashVector, m_dashDuration), () =>
             {
                 OnDashMovementEnd();
                 Debug.Log("Dash Movement Ended");

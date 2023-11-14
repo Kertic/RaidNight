@@ -441,29 +441,9 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 543668629942749190, guid: d5eb0726fc9f38d438a1a49b6917c2a5, type: 3}
-      propertyPath: m_RootOrder
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1216856978565454189, guid: d5eb0726fc9f38d438a1a49b6917c2a5, type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1870517760952250989, guid: d5eb0726fc9f38d438a1a49b6917c2a5, type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2684360212541024326, guid: d5eb0726fc9f38d438a1a49b6917c2a5, type: 3}
-      propertyPath: m_RootOrder
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 4981252893954751180, guid: d5eb0726fc9f38d438a1a49b6917c2a5, type: 3}
       propertyPath: m_Name
       value: Walls
-      objectReference: {fileID: 0}
-    - target: {fileID: 6993533870369033780, guid: d5eb0726fc9f38d438a1a49b6917c2a5, type: 3}
-      propertyPath: m_RootOrder
-      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7021026008700901456, guid: d5eb0726fc9f38d438a1a49b6917c2a5, type: 3}
       propertyPath: m_RootOrder
@@ -508,10 +488,6 @@ PrefabInstance:
     - target: {fileID: 7021026008700901456, guid: d5eb0726fc9f38d438a1a49b6917c2a5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8983106874357392316, guid: d5eb0726fc9f38d438a1a49b6917c2a5, type: 3}
-      propertyPath: m_RootOrder
-      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d5eb0726fc9f38d438a1a49b6917c2a5, type: 3}
@@ -1162,6 +1138,7 @@ GameObject:
   - component: {fileID: 2002730517}
   - component: {fileID: 2002730516}
   - component: {fileID: 2002730522}
+  - component: {fileID: 2002730523}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1357,6 +1334,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoAttackView: {fileID: 455091080}
+  projectileSpeed: 0.01
+  fireDirection: {x: 0, y: 1}
+--- !u!114 &2002730523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2002730510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c106cd38b6400d459e0c6c8ac4c15dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectilePrefab: {fileID: 6924403992519335721, guid: 7ac58d94b2db94ef1868f70979797eaf, type: 3}
 --- !u!1 &2087040622
 GameObject:
   m_ObjectHideFlags: 0

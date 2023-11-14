@@ -5,7 +5,7 @@ namespace Code.Player.StateMachines.PlayerControlStates.SubStates.Actionable
     public class Running : StateMachines.PlayerControlStates.SuperStates.Actionable
     {
         private Vector2 lastMovementVector;
-        public Running(PlayerData data, PlayerPhysics playerPhysics, PlayerControlsStateMachine controlsStateMachine) : base(data, playerPhysics, controlsStateMachine) { }
+        public Running(PlayerData data, EntityPhysics entityPhysics, PlayerControlsStateMachine controlsStateMachine) : base(data, entityPhysics, controlsStateMachine) { }
 
         public override void OnStateEnter()
         {
@@ -17,7 +17,7 @@ namespace Code.Player.StateMachines.PlayerControlStates.SubStates.Actionable
         public override void OnStateExit()
         {
             base.OnStateExit();
-            m_playerPhysics.RemoveContinuousForce(lastMovementVector);
+            MEntityPhysics.RemoveContinuousForce(lastMovementVector);
             m_controlsStateMachine.ResumeAutoAttacks();
         }
 
@@ -35,15 +35,15 @@ namespace Code.Player.StateMachines.PlayerControlStates.SubStates.Actionable
                 return;
             }
 
-            m_playerPhysics.RemoveContinuousForce(lastMovementVector);
+            MEntityPhysics.RemoveContinuousForce(lastMovementVector);
             lastMovementVector = newMovementApplication;
-            m_playerPhysics.AddContinuousForce(lastMovementVector);
+            MEntityPhysics.AddContinuousForce(lastMovementVector);
         }
 
         public override void OnReleaseMovementInput()
         {
             base.OnReleaseMovementInput();
-            m_playerPhysics.RemoveContinuousForce(lastMovementVector);
+            MEntityPhysics.RemoveContinuousForce(lastMovementVector);
             m_controlsStateMachine.ChangeToIdleState();
         }
 

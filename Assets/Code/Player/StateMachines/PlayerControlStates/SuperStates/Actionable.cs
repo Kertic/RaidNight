@@ -24,6 +24,6 @@ namespace Code.Player.StateMachines.PlayerControlStates.SuperStates
 
         public override void OnCollisionStay2D(Collision2D collision) { }
         public override void StateUpdate() { }
-        public Actionable(PlayerData data, PlayerPhysics playerPhysics, PlayerControlsStateMachine controlsStateMachine) : base(data, playerPhysics, controlsStateMachine) { }
+        public Actionable(PlayerData data, EntityPhysics entityPhysics, PlayerControlsStateMachine controlsStateMachine) : base(data, entityPhysics, controlsStateMachine) { }
     }
 }

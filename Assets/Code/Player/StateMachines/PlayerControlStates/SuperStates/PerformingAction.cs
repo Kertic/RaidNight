@@ -23,6 +23,6 @@ namespace Code.Player.StateMachines.PlayerControlStates.SuperStates
   
           public override void OnCollisionStay2D(Collision2D collision) { }
           public override void StateUpdate() { }
-          public PerformingAction(PlayerData data, PlayerPhysics playerPhysics, PlayerControlsStateMachine controlsStateMachine) : base(data, playerPhysics, controlsStateMachine) { }
+          public PerformingAction(PlayerData data, EntityPhysics entityPhysics, PlayerControlsStateMachine controlsStateMachine) : base(data, entityPhysics, controlsStateMachine) { }
       }
 }

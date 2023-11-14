@@ -1,28 +1,30 @@
 ﻿using Code.Player.StateMachines.PlayerWeaponStates;
 using UnityEngine;
-using UnityEngine.Pool;
 
 namespace Code.Player.StateMachines
 {
-    [RequireComponent(typeof(PlayerData), typeof(PlayerControlsStateMachine))]
+    [RequireComponent(typeof(PlayerData), typeof(PlayerControlsStateMachine), typeof(Weapon.Weapon))]
     public class PlayerWeaponStateMachine : MonoBehaviour
     {
         public PlayerData _PlayerData { get; private set; }
+        public Weapon.Weapon _Weapon { get; private set; }
         public PlayerControlsStateMachine _PlayerControlsStateMachine { get; private set; }
-        
+
         private PlayerWeaponState _currentWeaponState;
         private AttackCooldown _attackCooldown;
         private AttackCharging _attackCharging;
         private AttackHalted _attackHalted;
-        
 
-        [SerializeField]
-        private PlayerAutoAttackView autoAttackView;
+
+        [SerializeField] private PlayerAutoAttackView autoAttackView;
+        [SerializeField] private float projectileSpeed;
+        [SerializeField] private Vector2 fireDirection;
 
         private void Awake()
         {
             _PlayerData = GetComponent<PlayerData>();
             _PlayerControlsStateMachine = GetComponent<PlayerControlsStateMachine>();
+            _Weapon = GetComponent<Weapon.Weapon>();
             _attackCooldown = new AttackCooldown(_PlayerData, this, 1.5f); // Hardcoded cooldown between shots
             _attackCharging = new AttackCharging(_PlayerData, this);
             _attackHalted = new AttackHalted(_PlayerData, this);
@@ -63,6 +65,7 @@ namespace Code.Player.StateMachines
         public void FireAutoAttack()
         {
             //Fire Attack, apply on hit effects?
+            _Weapon.FireProjectile(fireDirection, projectileSpeed);
             ChangeState(_attackCooldown);
             autoAttackView.SetProgress(0.0f);
             autoAttackView.ChangeViewState(PlayerAutoAttackView.ViewState.COOLINGDOWN);

@@ -1,18 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
-public class ObjectPool : MonoBehaviour
+namespace Code.Systems
 {
-    // Start is called before the first frame update
-    void Start()
+    public class BulletPool : MonoBehaviour
     {
+        public ObjectPool<GameObject> _bulletPool;
         
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
         
     }
 }

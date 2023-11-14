@@ -1,5 +1,6 @@
 ﻿using Code.Player.StateMachines.PlayerWeaponStates;
 using UnityEngine;
+using UnityEngine.Pool;
 
 namespace Code.Player.StateMachines
 {
@@ -8,11 +9,12 @@ namespace Code.Player.StateMachines
     {
         public PlayerData _PlayerData { get; private set; }
         public PlayerControlsStateMachine _PlayerControlsStateMachine { get; private set; }
-
+        
         private PlayerWeaponState _currentWeaponState;
         private AttackCooldown _attackCooldown;
         private AttackCharging _attackCharging;
         private AttackHalted _attackHalted;
+        
 
         [SerializeField]
         private PlayerAutoAttackView autoAttackView;

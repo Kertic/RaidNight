@@ -1,12 +1,11 @@
 using UnityEngine;
+using UnityEngine.Pool;
 
 namespace Code.Player.Weapon
 {
     public class Weapon : MonoBehaviour
     {
-        [SerializeField]
-        private GameObject projectilePrefab;
-    
+        private ObjectPool<Projectile> _projectilePrefab;
         
     }
 }

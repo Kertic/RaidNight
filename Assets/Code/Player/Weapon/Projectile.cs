@@ -32,7 +32,7 @@ namespace Code.Player.Weapon
             _continuousForce = newTravelDirection.normalized * newSpeed;
             _entityPhysics.AddContinuousForce(_continuousForce);
             float angle = Mathf.Atan2(newTravelDirection.x, newTravelDirection.y) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+            transform.rotation = Quaternion.AngleAxis(angle, Vector3.back);
         }
 
         public void OnDisable()

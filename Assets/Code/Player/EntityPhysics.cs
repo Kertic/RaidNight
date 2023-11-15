@@ -21,12 +21,12 @@ namespace Code.Player
         }
 
         public Action<List<KeyValuePair<Vector2, Vector2>>> OnRaycastCollisionsDetected;
-        
+
         private Collider2D Collider2D { get; set; }
         private Rigidbody2D Rigidbody2D { get; set; }
         public ContactFilter2D _contactFilter2D;
         public float collisionBuffer;
-        
+
         private Vector2 _burstVelocity;
         private List<Vector2> _continuousForces;
         private List<KeyValuePair<UnityAction, BurstForce>> _burstForces;
@@ -88,7 +88,8 @@ namespace Code.Player
             if (MoveEntity(movementVector * Vector2.up)) return;
 
 
-            OnRaycastCollisionsDetected(hitLocations);
+            if (OnRaycastCollisionsDetected != null)
+                OnRaycastCollisionsDetected(hitLocations);
             Debug.Log("Collision detected, not moving (" + Rigidbody2D.gameObject.name + ")");
         }
 
@@ -102,6 +103,24 @@ namespace Code.Player
                 return true;
             }
 
+            // Bad code for demo, refactor to have dynamic collison reactions
+
+            bool hitWall = false;
+            foreach (RaycastHit2D raycastHit2D in _raycastHits)
+            {
+                if (raycastHit2D.collider.gameObject.CompareTag("Wall"))
+                {
+                    hitWall = true;
+                }
+            }
+
+            if (!hitWall)
+            {
+                Rigidbody2D.MovePosition(Rigidbody2D.position + movementVector);
+                return true;
+            }
+
+
             if (hitLocations.Count == 0)
             {
                 foreach (RaycastHit2D hit2D in _raycastHits)
@@ -113,18 +132,22 @@ namespace Code.Player
 
             return false;
         }
+
         public void AddContinuousForce(Vector2 continuousForce)
         {
             _continuousForces.Add(continuousForce);
         }
+
         public void RemoveContinuousForce(Vector2 continuousForce)
         {
             _continuousForces.Remove(continuousForce);
         }
+
         public void AddBurstForce(BurstForce burstForce, UnityAction onComplete)
         {
             _burstForces.Add(new KeyValuePair<UnityAction, BurstForce>(onComplete, burstForce));
         }
+
         private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.red;

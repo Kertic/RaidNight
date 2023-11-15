@@ -2,9 +2,8 @@
 
 namespace Code.Player.StateMachines.PlayerControlStates.SuperStates
 {
-  public abstract class PerformingAction : PlayerControlState
+  public abstract class ExecuteSkill : PlayerControlState
       {
-  
           public override void OnStateExit() { }
           public override void OnReceiveMovementInput(Vector2 direction) { }
           public override void OnReceiveButtonInput(PlayerControlsStateMachine.InputButton button) { }
@@ -23,6 +22,6 @@ namespace Code.Player.StateMachines.PlayerControlStates.SuperStates
   
           public override void OnCollisionStay2D(Collision2D collision) { }
           public override void StateUpdate() { }
-          public PerformingAction(PlayerData data, EntityPhysics entityPhysics, PlayerControlsStateMachine controlsStateMachine) : base(data, entityPhysics, controlsStateMachine) { }
+          public ExecuteSkill(PlayerData data, EntityPhysics entityPhysics, PlayerControlsStateMachine controlsStateMachine) : base(data, entityPhysics, controlsStateMachine) { }
       }
 }

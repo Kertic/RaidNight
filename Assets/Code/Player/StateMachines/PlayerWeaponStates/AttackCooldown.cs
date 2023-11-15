@@ -1,4 +1,4 @@
-﻿using Code.Player.States;
+﻿using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Code.Player.StateMachines.PlayerWeaponStates
@@ -9,7 +9,7 @@ namespace Code.Player.StateMachines.PlayerWeaponStates
         private float _maxCooldown;
         private bool _isHalted;
 
-        public AttackCooldown(PlayerData data, PlayerWeaponStateMachine stateMachine, float maxCooldown) : base(data, stateMachine)
+        public AttackCooldown(PlayerData data, PlayerAutoAttackStateMachine stateMachine, float maxCooldown) : base(data, stateMachine)
         {
             _cooldownRemaining = maxCooldown;
             _maxCooldown = maxCooldown;
@@ -26,24 +26,32 @@ namespace Code.Player.StateMachines.PlayerWeaponStates
             _isHalted = false;
         }
 
+        private void InstantlyFinishCooldown()
+        {
+            m_autoAttackStateMachine.BeginAttackCharging();
+        }
+        
         public override void OnStateEnter()
         {
+            _isHalted = false;
             _cooldownRemaining = _maxCooldown;
-            m_weaponStateMachine.SetViewProgress(1.0f);
-            m_weaponStateMachine._PlayerControlsStateMachine.m_haltAutoAttack += SetHalted;
-            m_weaponStateMachine._PlayerControlsStateMachine.m_resumeAutoAttack += SetUnHalted;
+            m_autoAttackStateMachine.SetViewProgress(1.0f);
+            m_autoAttackStateMachine._PlayerControlsStateMachine.m_haltAutoAttack += SetHalted;
+            m_autoAttackStateMachine._PlayerControlsStateMachine.m_resumeAutoAttack += SetUnHalted;
+            m_autoAttackStateMachine._PlayerControlsStateMachine.m_resetAutoAttack += InstantlyFinishCooldown;
         }
 
         public override void OnStateExit()
         {
-            m_weaponStateMachine._PlayerControlsStateMachine.m_haltAutoAttack -= SetHalted;
-            m_weaponStateMachine._PlayerControlsStateMachine.m_resumeAutoAttack -= SetUnHalted;
+            m_autoAttackStateMachine._PlayerControlsStateMachine.m_haltAutoAttack -= SetHalted;
+            m_autoAttackStateMachine._PlayerControlsStateMachine.m_resumeAutoAttack -= SetUnHalted;
+            m_autoAttackStateMachine._PlayerControlsStateMachine.m_resetAutoAttack -= InstantlyFinishCooldown;
         }
 
         public override void StateUpdate()
         {
             _cooldownRemaining -= Time.fixedDeltaTime;
-            m_weaponStateMachine.SetViewProgress(_cooldownRemaining / _maxCooldown);
+            m_autoAttackStateMachine.SetViewProgress(_cooldownRemaining / _maxCooldown);
 
             if (_cooldownRemaining > 0)
             {
@@ -52,11 +60,16 @@ namespace Code.Player.StateMachines.PlayerWeaponStates
 
             if (_isHalted)
             {
-                m_weaponStateMachine.HaltAttacks();
+                m_autoAttackStateMachine.HaltAttacks();
                 return;
             }
 
-            m_weaponStateMachine.BeginAttackCharging();
+            m_autoAttackStateMachine.BeginAttackCharging();
+        }
+
+        public void SetCooldownLength(float newMaxCooldown)
+        {
+            _maxCooldown = newMaxCooldown;
         }
     }
 }

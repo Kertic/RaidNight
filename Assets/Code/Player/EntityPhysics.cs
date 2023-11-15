@@ -20,13 +20,15 @@ namespace Code.Player
             }
         }
 
-        public Action<List<KeyValuePair<Vector2, Vector2>>> OnRaycastCollisionsDetected;
-
-        private Collider2D Collider2D { get; set; }
-        private Rigidbody2D Rigidbody2D { get; set; }
+        public Action<List<RaycastHit2D>> m_onRaycastCollisionsDetected;
         public ContactFilter2D _contactFilter2D;
         public float collisionBuffer;
 
+        [SerializeField]
+        private string[] collidingTags;
+
+        private Collider2D Collider2D { get; set; }
+        private Rigidbody2D Rigidbody2D { get; set; }
         private Vector2 _burstVelocity;
         private List<Vector2> _continuousForces;
         private List<KeyValuePair<UnityAction, BurstForce>> _burstForces;
@@ -87,40 +89,32 @@ namespace Code.Player
             if (MoveEntity(movementVector * Vector2.right)) return;
             if (MoveEntity(movementVector * Vector2.up)) return;
 
-
-            if (OnRaycastCollisionsDetected != null)
-                OnRaycastCollisionsDetected(hitLocations);
             Debug.Log("Collision detected, not moving (" + Rigidbody2D.gameObject.name + ")");
         }
 
         private bool MoveEntity(Vector2 movementVector)
         {
-            int collisions = Rigidbody2D.Cast(movementVector.normalized, _contactFilter2D, _raycastHits,
-                (movementVector).magnitude);
-            if (collisions == 0)
-            {
-                Rigidbody2D.MovePosition(Rigidbody2D.position + movementVector);
-                return true;
-            }
+            Rigidbody2D.Cast(movementVector.normalized, _contactFilter2D, _raycastHits, (movementVector).magnitude);
 
-            // Bad code for demo, refactor to have dynamic collison reactions
-
-            bool hitWall = false;
+            bool hitCollidingTagObj = false;
             foreach (RaycastHit2D raycastHit2D in _raycastHits)
             {
-                if (raycastHit2D.collider.gameObject.CompareTag("Wall"))
+                foreach (string collidingTag in collidingTags)
                 {
-                    hitWall = true;
+                    if (raycastHit2D.collider.gameObject.CompareTag(collidingTag))
+                    {
+                        hitCollidingTagObj = true;
+                    }
                 }
             }
 
-            if (!hitWall)
+            if (!hitCollidingTagObj)
             {
                 Rigidbody2D.MovePosition(Rigidbody2D.position + movementVector);
                 return true;
             }
-
-
+            
+            m_onRaycastCollisionsDetected?.Invoke(_raycastHits);
             if (hitLocations.Count == 0)
             {
                 foreach (RaycastHit2D hit2D in _raycastHits)

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -18,15 +19,6 @@ namespace Code.Player.Weapon
             _entityPhysics = GetComponent<EntityPhysics>();
         }
 
-        private void OnCollisionEnter2D(Collision2D other)
-        {
-            if (other.gameObject.CompareTag("Wall"))
-            {
-                Debug.Log("Collided with: " + other.gameObject.name);
-                ONHit();
-            }
-        }
-
         public void FireProjectile(Vector2 newTravelDirection, float newSpeed)
         {
             _continuousForce = newTravelDirection.normalized * newSpeed;
@@ -35,9 +27,21 @@ namespace Code.Player.Weapon
             transform.rotation = Quaternion.AngleAxis(angle, Vector3.back);
         }
 
-        public void OnDisable()
+        private void OnRaycastDetected(List<RaycastHit2D> collisions)
         {
+            ONHit?.Invoke();
+        }
+
+        private void OnEnable()
+        {
+            _entityPhysics.m_onRaycastCollisionsDetected += OnRaycastDetected;
+        }
+
+        private void OnDisable()
+        {
+            _entityPhysics.RemoveContinuousForce(_continuousForce);
             _continuousForce = Vector2.zero;
+            _entityPhysics.m_onRaycastCollisionsDetected -= OnRaycastDetected;
         }
     }
 }

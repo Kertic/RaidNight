@@ -1,5 +1,4 @@
-﻿using Code.Player.States;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Code.Player.StateMachines.PlayerWeaponStates
 {
@@ -8,37 +7,44 @@ namespace Code.Player.StateMachines.PlayerWeaponStates
         
         private float _chargedTime;
 
-        public AttackCharging(PlayerData data, PlayerWeaponStateMachine stateMachine) : base(data, stateMachine)
+        public AttackCharging(PlayerData data, PlayerAutoAttackStateMachine stateMachine) : base(data, stateMachine)
         {
             _chargedTime = 0;
         }
 
         private void HaltCharging()
         {
-            m_weaponStateMachine.HaltAttacks();
+            m_autoAttackStateMachine.HaltAttacks();
+        }
+
+        private void ResetAutoAttack()
+        {
+            m_autoAttackStateMachine.BeginAttackCharging();
         }
         
         public override void OnStateEnter()
         {
-            m_weaponStateMachine._PlayerControlsStateMachine.m_haltAutoAttack += HaltCharging;
+            m_autoAttackStateMachine._PlayerControlsStateMachine.m_haltAutoAttack += HaltCharging;
+            m_autoAttackStateMachine._PlayerControlsStateMachine.m_resetAutoAttack += ResetAutoAttack;
             _chargedTime = 0;
-            m_weaponStateMachine.SetViewProgress(0.0f);
+            m_autoAttackStateMachine.SetViewProgress(0.0f);
         }
 
         public override void OnStateExit()
         {
-            m_weaponStateMachine._PlayerControlsStateMachine.m_haltAutoAttack -= HaltCharging;
+            m_autoAttackStateMachine._PlayerControlsStateMachine.m_haltAutoAttack -= HaltCharging;
+            m_autoAttackStateMachine._PlayerControlsStateMachine.m_resetAutoAttack -= ResetAutoAttack;
             _chargedTime = 0;
         }
 
         public override void StateUpdate()
         {
             _chargedTime += Time.fixedDeltaTime;
-            m_weaponStateMachine.SetViewProgress(_chargedTime / (1.0f / m_data._AttackSpeed));
+            m_autoAttackStateMachine.SetViewProgress(_chargedTime / (1.0f / m_data._AttackSpeed));
             if (_chargedTime >= 1.0f / m_data._AttackSpeed)
             {
                 // Fire Shot, Transition to Attack cooldown
-                m_weaponStateMachine.FireAutoAttack();
+                m_autoAttackStateMachine.FireAutoAttack();
             }
         }
         

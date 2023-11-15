@@ -1,25 +1,21 @@
-using Code.Player.States;
 using UnityEngine;
 
 namespace Code.Player.StateMachines.PlayerControlStates
 {
-    public abstract class PlayerControlState : IState
+    public abstract class PlayerControlState : State
     {
         protected PlayerData m_data;
-        protected EntityPhysics MEntityPhysics;
+        protected EntityPhysics m_entityPhysics;
         protected PlayerControlsStateMachine m_controlsStateMachine;
 
         public PlayerControlState(PlayerData data, EntityPhysics entityPhysics, PlayerControlsStateMachine controlsStateMachine)
         {
             m_data = data;
-            MEntityPhysics = entityPhysics;
+            m_entityPhysics = entityPhysics;
             m_controlsStateMachine = controlsStateMachine;
         }
 
-        public override void OnStateEnter()
-        {
-            Debug.Log("Entered:" + this.GetType().Name);
-        }
+        public override void OnStateEnter() { }
 
         public abstract void OnReceiveMovementInput(Vector2 direction);
         public abstract void OnReceiveButtonInput(PlayerControlsStateMachine.InputButton button);

@@ -1,7 +1,5 @@
-using System;
 using UnityEngine;
 using UnityEngine.Pool;
-using UnityEngine.Serialization;
 
 namespace Code.Player.Weapon
 {
@@ -45,6 +43,7 @@ namespace Code.Player.Weapon
         {
             Projectile projectile = _projectilePool.Get();
             projectile.ONHit += () => _projectilePool.Release(projectile);
+            projectile.transform.position = transform.position;
             projectile.FireProjectile(fireDirection, projectileSpeed);
         }
     }

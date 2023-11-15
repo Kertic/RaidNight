@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Code.Camera;
 using Code.Player.StateMachines.PlayerControlStates;
 using Code.Player.StateMachines.PlayerControlStates.SubStates.Actionable;
-using Code.Player.StateMachines.PlayerControlStates.SubStates.UseSkill;
+using Code.Player.StateMachines.PlayerControlStates.SuperStates;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -30,20 +30,24 @@ namespace Code.Player.StateMachines
         private PlayerControlState _currentControlState;
         public PlayerData PlayerData { get; private set; }
         public EntityPhysics EntityPhysics { get; private set; }
-        public Idle _Idle { get; private set; }
-        public Running _Running { get; private set; }
-        public Dash _Dash { get; private set; }
+        protected Idle _Idle { get; set; }
+        protected Running _Running { get; set; }
+        protected ExecuteSkill _PrimaryAttack { get; set; }
+        protected ExecuteSkill _SecondaryAttack { get; set; }
+        protected ExecuteSkill _Dash { get; set; }
+        protected ExecuteSkill _Ultimate { get; set; }
 
         public Action m_haltAutoAttack;
+        public Action m_resetAutoAttack;
         public Action m_resumeAutoAttack;
+        static public Vector2 mousePos; 
 
-        private void Awake()
+        protected virtual void Awake()
         {
             PlayerData = GetComponent<PlayerData>();
             EntityPhysics = GetComponent<EntityPhysics>();
             _currentControlState = _Idle = new Idle(PlayerData, EntityPhysics, this);
             _Running = new Running(PlayerData, EntityPhysics, this);
-            _Dash = new Dash(PlayerData, EntityPhysics, this);
             _controls = new Controls();
             _inputCallbacks = new Dictionary<InputAction, InputButton>
             {
@@ -55,6 +59,11 @@ namespace Code.Player.StateMachines
             _controls.Gameplay.Movement.performed += OnMovementInput;
             _controls.Gameplay.Movement.canceled += OnMovementInputEnd;
             _controls.Gameplay.Zoom.performed += cam.ZoomDistance;
+            _controls.Gameplay.MousePos.performed += context =>
+            {
+                Vector2 mousePos2d = context.ReadValue<Vector2>();
+                mousePos = PlayerCam.Instance.Camera.ScreenToWorldPoint(mousePos2d);
+            };
 
             foreach (KeyValuePair<InputAction, InputButton> action in _inputCallbacks)
             {
@@ -140,20 +149,43 @@ namespace Code.Player.StateMachines
             ChangeState(_Idle);
         }
 
-        public void ChangeToDashingState(Vector2 dashVector, float dashDuration)
+        public void ChangeToPrimaryAttack()
         {
-            _Dash.SetDashVectorAndDuration(dashVector, dashDuration);
-            ChangeState(_Dash);
+            if (_PrimaryAttack != null)
+                ChangeState(_PrimaryAttack);
+        }
+
+        public void ChangeToSecondaryAttack()
+        {
+            if (_SecondaryAttack != null)
+                ChangeState(_SecondaryAttack);
+        }
+
+        public void ChangeToDash()
+        {
+            if (_Dash != null)
+                ChangeState(_Dash);
+        }
+
+        public void ChangeToUltimate()
+        {
+            if (_Ultimate != null)
+                ChangeState(_Ultimate);
         }
 
         public void HaltAutoAttacks()
         {
-            m_haltAutoAttack();
+            m_haltAutoAttack?.Invoke();
         }
 
         public void ResumeAutoAttacks()
         {
-            m_resumeAutoAttack();
+            m_resumeAutoAttack?.Invoke();
+        }
+
+        public void ResetAutoTimer()
+        {
+            m_resetAutoAttack?.Invoke();
         }
     }
 }

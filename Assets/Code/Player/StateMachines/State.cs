@@ -1,6 +1,6 @@
-﻿namespace Code.Player.States
+﻿namespace Code.Player.StateMachines
 {
-    public abstract class IState
+    public abstract class State
     {
         public abstract void OnStateEnter();
 

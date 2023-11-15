@@ -1,9 +1,8 @@
-﻿using Code.Player.StateMachines.PlayerControlStates.SuperStates;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Code.Player.StateMachines.PlayerControlStates.SubStates.UseSkill
+namespace Code.Player.StateMachines.PlayerControlStates.SubStates.ExecuteSkill
 {
-    public class Dash : PerformingAction
+    public class Dash : SuperStates.ExecuteSkill
     {
         protected float m_dashDuration;
         protected Vector2 m_dashVector;
@@ -20,7 +19,7 @@ namespace Code.Player.StateMachines.PlayerControlStates.SubStates.UseSkill
         {
             base.OnStateEnter();
             _active = true;
-            MEntityPhysics.AddBurstForce(new EntityPhysics.BurstForce(m_dashVector, m_dashDuration), () =>
+            m_entityPhysics.AddBurstForce(new EntityPhysics.BurstForce(m_dashVector, m_dashDuration), () =>
             {
                 OnDashMovementEnd();
                 Debug.Log("Dash Movement Ended");

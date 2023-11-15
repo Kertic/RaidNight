@@ -1,28 +1,24 @@
-﻿using Code.Player.States;
-using UnityEngine.Networking;
+﻿using UnityEngine.Networking;
 
 namespace Code.Player.StateMachines.PlayerWeaponStates
 {
     public class AttackHalted : PlayerWeaponState
     {
-        public AttackHalted(PlayerData data, PlayerWeaponStateMachine stateMachine) : base(data, stateMachine)
-        {
-            
-        }
+        public AttackHalted(PlayerData data, PlayerAutoAttackStateMachine stateMachine) : base(data, stateMachine) { }
 
         private void ResumeCharging()
         {
-            m_weaponStateMachine.BeginAttackCharging();
+            m_autoAttackStateMachine.BeginAttackCharging();
         }
 
         public override void OnStateEnter()
         {
-            m_weaponStateMachine._PlayerControlsStateMachine.m_resumeAutoAttack += ResumeCharging;
+            m_autoAttackStateMachine._PlayerControlsStateMachine.m_resumeAutoAttack += ResumeCharging;
         }
 
         public override void OnStateExit()
         {
-            m_weaponStateMachine._PlayerControlsStateMachine.m_resumeAutoAttack -= ResumeCharging;
+            m_autoAttackStateMachine._PlayerControlsStateMachine.m_resumeAutoAttack -= ResumeCharging;
         }
 
         public override void StateUpdate() { }

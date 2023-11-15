@@ -89,6 +89,15 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""processors"": ""NormalizeVector2"",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""MousePos"",
+                    ""type"": ""Value"",
+                    ""id"": ""e9a44c30-c075-464a-a3ab-90d0274a6b67"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -256,6 +265,17 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""action"": ""Zoom"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b8fd8449-8559-4312-b1c7-8381c9ca7dbf"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MousePos"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -271,6 +291,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         m_Gameplay_Interrupt = m_Gameplay.FindAction("Interrupt", throwIfNotFound: true);
         m_Gameplay_Ultimate = m_Gameplay.FindAction("Ultimate", throwIfNotFound: true);
         m_Gameplay_Zoom = m_Gameplay.FindAction("Zoom", throwIfNotFound: true);
+        m_Gameplay_MousePos = m_Gameplay.FindAction("MousePos", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -337,6 +358,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Interrupt;
     private readonly InputAction m_Gameplay_Ultimate;
     private readonly InputAction m_Gameplay_Zoom;
+    private readonly InputAction m_Gameplay_MousePos;
     public struct GameplayActions
     {
         private @Controls m_Wrapper;
@@ -348,6 +370,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         public InputAction @Interrupt => m_Wrapper.m_Gameplay_Interrupt;
         public InputAction @Ultimate => m_Wrapper.m_Gameplay_Ultimate;
         public InputAction @Zoom => m_Wrapper.m_Gameplay_Zoom;
+        public InputAction @MousePos => m_Wrapper.m_Gameplay_MousePos;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -378,6 +401,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @Zoom.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnZoom;
                 @Zoom.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnZoom;
                 @Zoom.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnZoom;
+                @MousePos.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMousePos;
+                @MousePos.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMousePos;
+                @MousePos.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMousePos;
             }
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -403,6 +429,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @Zoom.started += instance.OnZoom;
                 @Zoom.performed += instance.OnZoom;
                 @Zoom.canceled += instance.OnZoom;
+                @MousePos.started += instance.OnMousePos;
+                @MousePos.performed += instance.OnMousePos;
+                @MousePos.canceled += instance.OnMousePos;
             }
         }
     }
@@ -416,5 +445,6 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         void OnInterrupt(InputAction.CallbackContext context);
         void OnUltimate(InputAction.CallbackContext context);
         void OnZoom(InputAction.CallbackContext context);
+        void OnMousePos(InputAction.CallbackContext context);
     }
 }

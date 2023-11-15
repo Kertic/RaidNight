@@ -1,16 +1,14 @@
-using Code.Player.States;
-
 namespace Code.Player.StateMachines.PlayerWeaponStates
 {
-    public abstract class PlayerWeaponState : IState
+    public abstract class PlayerWeaponState : State
     {
         protected PlayerData m_data;
-        protected PlayerWeaponStateMachine m_weaponStateMachine;
+        protected PlayerAutoAttackStateMachine m_autoAttackStateMachine;
 
-        public PlayerWeaponState(PlayerData data, PlayerWeaponStateMachine stateMachine)
+        public PlayerWeaponState(PlayerData data, PlayerAutoAttackStateMachine stateMachine)
         {
             m_data = data;
-            m_weaponStateMachine = stateMachine;
+            m_autoAttackStateMachine = stateMachine;
         }
     }
 }

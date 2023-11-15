@@ -46,8 +46,6 @@ namespace Code.Player.StateMachines.PlayerWeaponStates
                     autoAttackHaltedBar.gameObject.SetActive(true);
                     break;
             }
-
-            Debug.Log("AA Entering: " + newState);
         }
     }
 }

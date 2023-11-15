@@ -102,6 +102,7 @@ GameObject:
   - component: {fileID: 2300302420414084331}
   - component: {fileID: 77498108421633938}
   - component: {fileID: 6924403992519335721}
+  - component: {fileID: 1397257087642027917}
   m_Layer: 0
   m_Name: ProjectileTest
   m_TagString: Untagged
@@ -226,3 +227,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6439ead84f48f47c3955073285737e46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1397257087642027917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2634170279430080083}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d34a68df8930bd4f9b68b2f2f11ed63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _contactFilter2D:
+    useTriggers: 0
+    useLayerMask: 0
+    useDepth: 0
+    useOutsideDepth: 0
+    useNormalAngle: 0
+    useOutsideNormalAngle: 0
+    layerMask:
+      serializedVersion: 2
+      m_Bits: 0
+    minDepth: 0
+    maxDepth: 0
+    minNormalAngle: 0
+    maxNormalAngle: 0
+  collisionBuffer: 0
+  collidingTags:
+  - Wall

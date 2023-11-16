@@ -22,7 +22,7 @@ namespace Code.Player.StateMachines
         private Weapon.Weapon weapon;
 
         [SerializeField]
-        private PlayerAutoAttackView autoAttackView;
+        private PlayerCastView castView;
 
         [SerializeField]
         private float projectileSpeed;
@@ -52,30 +52,33 @@ namespace Code.Player.StateMachines
         public void HaltAttacks()
         {
             ChangeState(_attackHalted);
-            autoAttackView.SetProgress(1.0f);
-            autoAttackView.ChangeViewState(PlayerAutoAttackView.ViewState.IDLE);
+            castView.SetProgress(1.0f);
+            castView.ChangeViewState(PlayerCastView.ViewState.IDLE);
         }
 
         public void BeginAttackCharging()
         {
             ChangeState(_attackCharging);
-            autoAttackView.SetProgress(0.0f);
-            autoAttackView.ChangeViewState(PlayerAutoAttackView.ViewState.CHARGING);
+            castView.SetProgress(0.0f);
+            castView.ChangeViewState(PlayerCastView.ViewState.CHARGING);
         }
 
         public void FireAutoAttack()
         {
             //Fire Attack, apply on hit effects?
-            weapon.FireProjectile(Vector2.MoveTowards(transform.position, PlayerControlsStateMachine.mousePos, 1.0f).normalized, projectileSpeed);
+            weapon.FireProjectile(
+                PlayerCam.mousePosition - (Vector2)transform.position,
+
+                projectileSpeed);
             _attackCooldown.SetCooldownLength(1.5f / playerData._AttackSpeed);
             ChangeState(_attackCooldown);
-            autoAttackView.SetProgress(1.0f);
-            autoAttackView.ChangeViewState(PlayerAutoAttackView.ViewState.COOLINGDOWN);
+            castView.SetProgress(1.0f);
+            castView.ChangeViewState(PlayerCastView.ViewState.COOLINGDOWN);
         }
 
         public void SetViewProgress(float progress)
         {
-            autoAttackView.SetProgress(progress);
+            castView.SetProgress(progress);
         }
 
         private void OnDrawGizmosSelected()
@@ -83,9 +86,11 @@ namespace Code.Player.StateMachines
             if (PlayerCam.Instance != null)
             {
                 Gizmos.color = Color.blue;
-                Vector3 mousePos = PlayerCam.Instance.Camera.ScreenToWorldPoint(PlayerControlsStateMachine.mousePos);
-                mousePos.z = transform.position.z;
+                Vector3 mousePos = PlayerCam.mousePosition;
+                //mousePos.z = transform.position.z;
                 Gizmos.DrawWireCube(mousePos, Vector3.one);
+                Gizmos.color = Color.red;
+                Gizmos.DrawLine( mousePos, transform.position);
             }
         }
     }

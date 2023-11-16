@@ -8,6 +8,7 @@ namespace Code.Camera
     public class PlayerCam : MonoBehaviour
     {
         static public PlayerCam Instance { get; private set; }
+        static public Vector2 mousePosition { get; private set; }
         public UnityEngine.Camera Camera { get; private set; }
 
         [SerializeField]
@@ -32,6 +33,13 @@ namespace Code.Camera
             Camera = GetComponent<UnityEngine.Camera>();
         }
 
+        private void Update()
+        {
+            Vector3 mousePosition3d = Mouse.current.position.ReadValue();
+            mousePosition3d.z = Camera.gameObject.transform.position.z * -1.0f;
+            mousePosition = Camera.ScreenToWorldPoint(mousePosition3d);
+        }
+
         void FixedUpdate()
         {
             Vector3 position = transform.position;
@@ -39,6 +47,13 @@ namespace Code.Camera
             deltaLerp.z = position.z; // Don't change the Z
             position = deltaLerp;
             transform.position = position;
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawSphere(mousePosition, 0.5f);
+       
         }
     }
 }

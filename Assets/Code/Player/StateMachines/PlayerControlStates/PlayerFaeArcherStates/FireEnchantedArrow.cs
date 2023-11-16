@@ -21,7 +21,7 @@ namespace Code.Player.StateMachines.PlayerControlStates.PlayerFaeArcherStates
         public override void OnStateEnter()
         {
             base.OnStateEnter();
-            _castBar.SetProgress(0.0f);
+            _castBar.SetProgress(0.0f);//TODO This shouldn't be in the state likely.
             _castBar.ChangeViewState(PlayerCastView.ViewState.CHARGING);
             _castBar.SetText("Enchanted Arrow");
             m_controlsStateMachine.HaltAutoAttacks();

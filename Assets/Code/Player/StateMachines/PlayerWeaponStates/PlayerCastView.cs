@@ -9,10 +9,10 @@ namespace Code.Player.StateMachines.PlayerWeaponStates
     public class PlayerCastView : MonoBehaviour
     {
         [SerializeField]
-        private RectTransform chargingBar, cooldownBar, disabledBar, background;
+        protected RectTransform chargingBar, cooldownBar, disabledBar, background;
 
         [SerializeField]
-        private TextMeshProUGUI words;
+        protected TextMeshProUGUI words;
 
         public enum ViewState
         {

@@ -1,5 +1,5 @@
 using Code.Player.StateMachines.PlayerControlStates.PlayerFaeArcherStates;
-using Code.Player.StateMachines.PlayerWeaponStates;
+using Code.Player.Weapon;
 using UnityEngine;
 
 namespace Code.Player.StateMachines
@@ -7,11 +7,19 @@ namespace Code.Player.StateMachines
     [RequireComponent(typeof(PlayerData), typeof(EntityPhysics))]
     public class PlayerFaeArcherStateMachine : PlayerControlsStateMachine
     {
-        [SerializeField] private Weapon.Weapon enchantedArrowWeapon;
-        [SerializeField] private float enchantedArrowProjectileSpeed;
-        [SerializeField] private float fireEnchantedArrowCastTime;
-        [SerializeField] private float flitMaxDistance;
-        [SerializeField] private float flitDuration;
+        [Header("Enchanted Arrow")]
+        [SerializeField]
+        private Weapon.Weapon enchantedArrowWeapon;
+
+        [SerializeField]
+        private float enchantedArrowProjectileSpeed, fireEnchantedArrowCastTime, enchantedArrowDamage;
+
+        [Header("Flit")]
+        [SerializeField]
+        private float flitMaxDistance;
+
+        [SerializeField]
+        private float flitDuration;
 
         private Flit _Flit { get; set; }
         private FireEnchantedArrow _FireEnchantedArrow { get; set; }
@@ -19,7 +27,7 @@ namespace Code.Player.StateMachines
         protected override void Awake()
         {
             base.Awake();
-            _Dash = _Flit = new Flit(PlayerData, EntityPhysics, this, flitMaxDistance,flitDuration );
+            _Dash = _Flit = new Flit(PlayerData, EntityPhysics, this, flitMaxDistance, flitDuration);
             _PrimaryAttack = _FireEnchantedArrow = new FireEnchantedArrow(PlayerData, EntityPhysics, this, castBarView);
         }
 
@@ -38,7 +46,23 @@ namespace Code.Player.StateMachines
 
         public void FireEnchantedArrowWeapon(Vector2 targetLocation)
         {
-            enchantedArrowWeapon.FireProjectile(targetLocation - (Vector2)transform.position, enchantedArrowProjectileSpeed);
+            Projectile enchantedArrow = enchantedArrowWeapon.FireProjectile(targetLocation - (Vector2)transform.position, enchantedArrowProjectileSpeed);
+            enchantedArrow.m_onHit += hit2Ds =>
+            {
+                foreach (RaycastHit2D hit in hit2Ds)
+                {
+                    Entity.Entity entity = hit.collider.gameObject.GetComponent<Entity.Entity>();
+                    if (entity != null)
+                    {
+                        EnchantedArrowOnEntityHit(entity);
+                    }
+                }
+            };
+        }
+
+        private void EnchantedArrowOnEntityHit(Entity.Entity hitEntity)
+        {
+            hitEntity.TakeDamage(enchantedArrowDamage);
         }
     }
 }

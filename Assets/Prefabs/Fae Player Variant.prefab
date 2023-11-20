@@ -241,7 +241,8 @@ MonoBehaviour:
   castBarView: {fileID: 4858175139143665954}
   enchantedArrowWeapon: {fileID: 2079363060}
   enchantedArrowProjectileSpeed: 5
-  fireEnchantedArrowCastTime: 1.5
+  fireEnchantedArrowCastTime: 0.5
+  enchantedArrowDamage: 1
   flitMaxDistance: 1
   flitDuration: 0.05
 --- !u!224 &1839857876071113425 stripped

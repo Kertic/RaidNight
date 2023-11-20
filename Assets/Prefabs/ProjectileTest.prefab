@@ -256,3 +256,4 @@ MonoBehaviour:
   collisionBuffer: 0
   collidingTags:
   - Wall
+  - NonPlayerEntity

@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Code.Player.Weapon
 {
     [RequireComponent(typeof(EntityPhysics))]
     public class Projectile : MonoBehaviour
     {
-        public Action ONHit;
+        public Action<RaycastHit2D[]> m_onHit;
+        public Action<RaycastHit2D[]> m_onTrigger;
 
         private Weapon _firingWeapon;
         private EntityPhysics _entityPhysics;
@@ -27,21 +27,30 @@ namespace Code.Player.Weapon
             transform.rotation = Quaternion.AngleAxis(angle, Vector3.back);
         }
 
-        private void OnRaycastDetected(List<RaycastHit2D> collisions)
+        private void OnRaycastCollisionsDetected(List<RaycastHit2D> collisions)
         {
-            ONHit?.Invoke();
+            m_onHit?.Invoke(collisions.ToArray());
+        }
+
+        private void OnRaycastTriggersDetected(Dictionary<string, RaycastHit2D> collisions)
+        {
+            RaycastHit2D[] hits = new RaycastHit2D[collisions.Count];
+            collisions.Values.CopyTo(hits, 0);
+            m_onTrigger?.Invoke(hits);
         }
 
         private void OnEnable()
         {
-            _entityPhysics.m_onRaycastCollisionsDetected += OnRaycastDetected;
+            _entityPhysics.m_onRaycastCollisionsDetected += OnRaycastCollisionsDetected;
+            _entityPhysics.m_onRaycastTriggersDetected += OnRaycastTriggersDetected;
         }
 
         private void OnDisable()
         {
             _entityPhysics.RemoveContinuousForce(_continuousForce);
             _continuousForce = Vector2.zero;
-            _entityPhysics.m_onRaycastCollisionsDetected -= OnRaycastDetected;
+            _entityPhysics.m_onRaycastCollisionsDetected -= OnRaycastCollisionsDetected;
+            _entityPhysics.m_onRaycastTriggersDetected -= OnRaycastTriggersDetected;
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Code.Player.Weapon
         private void OnReturnToPool(Projectile projectile)
         {
             projectile.gameObject.SetActive(false);
-            projectile.ONHit = null;
+            projectile.m_onHit = null;
         }
 
         private void OnDestroyProjectile(Projectile projectile)
@@ -39,12 +39,13 @@ namespace Code.Player.Weapon
 
         #endregion
 
-        public void FireProjectile(Vector2 fireDirection, float projectileSpeed)
+        public Projectile FireProjectile(Vector2 fireDirection, float projectileSpeed)
         {
-            Projectile projectile = _projectilePool.Get();
-            projectile.ONHit += () => _projectilePool.Release(projectile);
-            projectile.transform.position = transform.position;
-            projectile.FireProjectile(fireDirection, projectileSpeed);
+            Projectile firedProjectile = _projectilePool.Get();
+            firedProjectile.m_onHit += (_) => _projectilePool.Release(firedProjectile);
+            firedProjectile.transform.position = transform.position;
+            firedProjectile.FireProjectile(fireDirection, projectileSpeed);
+            return firedProjectile;
         }
     }
 }

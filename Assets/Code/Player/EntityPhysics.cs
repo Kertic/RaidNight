@@ -21,11 +21,12 @@ namespace Code.Player
         }
 
         public Action<List<RaycastHit2D>> m_onRaycastCollisionsDetected;
+        public Action<Dictionary<string, RaycastHit2D>> m_onRaycastTriggersDetected;
         public ContactFilter2D _contactFilter2D;
         public float collisionBuffer;
 
         [SerializeField]
-        private string[] collidingTags;
+        private string[] collidingTags, triggerTags;
 
         private Collider2D Collider2D { get; set; }
         private Rigidbody2D Rigidbody2D { get; set; }
@@ -88,15 +89,19 @@ namespace Code.Player
             if (movementVector == Vector2.zero || MoveEntity(movementVector)) return;
             if (MoveEntity(movementVector * Vector2.right)) return;
             if (MoveEntity(movementVector * Vector2.up)) return;
-
-            Debug.Log("Collision detected, not moving (" + Rigidbody2D.gameObject.name + ")");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="movementVector"></param>
+        /// <returns>Returns true if it can successfully move, false otherwise</returns>
         private bool MoveEntity(Vector2 movementVector)
         {
             Rigidbody2D.Cast(movementVector.normalized, _contactFilter2D, _raycastHits, (movementVector).magnitude);
 
             bool hitCollidingTagObj = false;
+            Dictionary<string, RaycastHit2D> triggeringGameObjects = new();
             foreach (RaycastHit2D raycastHit2D in _raycastHits)
             {
                 foreach (string collidingTag in collidingTags)
@@ -106,14 +111,28 @@ namespace Code.Player
                         hitCollidingTagObj = true;
                     }
                 }
+
+                for (int i = 0; i < triggerTags.Length; i++)
+                {
+                    if (raycastHit2D.collider.gameObject.CompareTag(triggerTags[i]))
+                    {
+                        triggeringGameObjects[triggerTags[i]] = raycastHit2D;
+                    }
+                }
+
             }
 
+            if (triggeringGameObjects.Count > 0)
+            {
+                m_onRaycastTriggersDetected?.Invoke(triggeringGameObjects);
+            }
+            
             if (!hitCollidingTagObj)
             {
                 Rigidbody2D.MovePosition(Rigidbody2D.position + movementVector);
                 return true;
             }
-            
+
             m_onRaycastCollisionsDetected?.Invoke(_raycastHits);
             if (hitLocations.Count == 0)
             {

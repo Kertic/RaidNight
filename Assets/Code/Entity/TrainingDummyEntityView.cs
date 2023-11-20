@@ -1,5 +1,5 @@
 using System;
-using Code.Player.StateMachines.PlayerWeaponStates;
+using Code.Entity.Player.Views;
 
 namespace Code.Entity
 {

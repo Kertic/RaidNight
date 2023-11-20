@@ -220,6 +220,17 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 8755925106836426025, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
+--- !u!114 &849795244230428908 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7764245092452230937, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
+  m_PrefabInstance: {fileID: 6920686292133261301}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0708fd31a711ed74790588302ba48b34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1839857876071113414 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8755925106836426035, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
@@ -238,11 +249,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 0}
+  targetIndicatorView: {fileID: 849795244230428908}
   castBarView: {fileID: 4858175139143665954}
-  enchantedArrowWeapon: {fileID: 2079363060}
-  enchantedArrowProjectileSpeed: 5
+  enchantedArrowFireAndForgetWeapon: {fileID: 2079363060}
+  enchantedArrowProjectileSpeed: 12
   fireEnchantedArrowCastTime: 0.5
-  enchantedArrowDamage: 1
+  enchantedArrowDamageMultiplier: 1
   flitMaxDistance: 1
   flitDuration: 0.05
 --- !u!224 &1839857876071113425 stripped

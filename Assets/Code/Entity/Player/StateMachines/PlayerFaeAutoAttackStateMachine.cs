@@ -17,10 +17,22 @@ namespace Code.Entity.Player.StateMachines
         public override void FireAutoAttack()
         {
             TrackingProjectile projectile = weapon.FireProjectile(playerControlsStateMachine._AutoAttackTarget.transform, projectileSpeed);
-            Entity currentTarget = playerControlsStateMachine._AutoAttackTarget;
+            var targetTrans = playerControlsStateMachine._AutoAttackTarget.transform;
             BeginAttackCooldown();
             _PlayerControlsStateMachine.RemoveMischiefCharge();
-            AddProjectileOnHit(projectile, ref currentTarget);
+
+            projectile.m_onHit += hit2Ds =>
+            {
+                foreach (RaycastHit2D hit in hit2Ds)
+                {
+                    Entity entity = hit.collider.gameObject.GetComponent<Entity>();
+                    if (entity != null)
+                    {
+                        entity.TakeDamage(playerData._BaseAttackDamage);
+                        _PlayerControlsStateMachine.LaunchWispAttack(targetTrans);
+                    }
+                }
+            };
         }
 
         private void OnDrawGizmosSelected()
@@ -33,25 +45,6 @@ namespace Code.Entity.Player.StateMachines
                 Gizmos.color = Color.red;
                 Gizmos.DrawLine(mousePos, transform.position);
             }
-        }
-
-        private void AddProjectileOnHit(TrackingProjectile projectile, ref Entity target)
-        {
-            Transform targetTransform = target.transform;
-            Debug.Log("Storing trans:" + targetTransform);
-            projectile.m_onHit += hit2Ds =>
-            {
-                foreach (RaycastHit2D hit in hit2Ds)
-                {
-                    Entity entity = hit.collider.gameObject.GetComponent<Entity>();
-                    if (entity != null)
-                    {
-                        entity.TakeDamage(playerData._BaseAttackDamage);
-                        _PlayerControlsStateMachine.LaunchWispAttack(targetTransform);
-                        Debug.Log("Targeting trans: " + targetTransform);
-                    }
-                }
-            };
         }
     }
 }

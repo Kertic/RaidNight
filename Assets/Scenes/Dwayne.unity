@@ -3680,12 +3680,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3295558874927957169, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
       propertyPath: projectileSpeed
-      value: 1
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5405098573614200258, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
       propertyPath: cam
       value: 
       objectReference: {fileID: 301148522}
+    - target: {fileID: 5405098573614200258, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
+      propertyPath: wispLaunchSpeed
+      value: 9
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
 --- !u!224 &3295558874927957164 stripped

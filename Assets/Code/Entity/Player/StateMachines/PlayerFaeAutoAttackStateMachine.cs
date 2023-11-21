@@ -1,5 +1,4 @@
 ﻿using Code.Camera;
-using Code.Entity.Player.Views;
 using Code.Entity.Player.Weapon;
 using UnityEngine;
 

@@ -4,9 +4,11 @@ namespace Code.Entity.Player.StateMachines.PlayerControlStates.SubStates.Execute
 {
     public class Dash : SuperStates.ExecuteSkill
     {
+        private bool _active;
+        private PlayerControlsStateMachine.AttackHaltHandle _haltHandle;
+
         protected float m_dashDuration;
         protected Vector2 m_dashVector;
-        private bool _active;
 
         public Dash(PlayerData data, EntityPhysics entityPhysics, PlayerControlsStateMachine controlsStateMachine) : base(data, entityPhysics, controlsStateMachine) { }
 
@@ -15,6 +17,7 @@ namespace Code.Entity.Player.StateMachines.PlayerControlStates.SubStates.Execute
             m_dashVector = dashVector;
             m_dashDuration = dashDuration;
         }
+
         public override void OnStateEnter()
         {
             base.OnStateEnter();
@@ -24,14 +27,14 @@ namespace Code.Entity.Player.StateMachines.PlayerControlStates.SubStates.Execute
                 OnDashMovementEnd();
                 Debug.Log("Dash Movement Ended");
             });
-            m_controlsStateMachine.HaltAutoAttacks();
+            _haltHandle = m_controlsStateMachine.HaltAutoAttacks();
         }
 
         public override void OnStateExit()
         {
             base.OnStateExit();
             _active = false;
-            m_controlsStateMachine.ResumeAutoAttacks();
+            m_controlsStateMachine.ReleaseAutoAttackHaltHandle(_haltHandle);
         }
 
         private void OnDashMovementEnd()

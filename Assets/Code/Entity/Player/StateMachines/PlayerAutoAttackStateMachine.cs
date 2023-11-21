@@ -8,63 +8,89 @@ namespace Code.Entity.Player.StateMachines
 {
     public class PlayerAutoAttackStateMachine : MonoBehaviour
     {
-        private PlayerWeaponState _currentWeaponState;
-        private AttackCooldown _attackCooldown;
-        private AttackCharging _attackCharging;
-        private AttackHalted _attackHalted;
+        protected PlayerWeaponState m_currentWeaponState;
+        protected AttackCooldown m_attackCooldown;
+        protected AttackCharging m_attackCharging;
+        protected AttackHalted m_attackHalted;
+        protected AttackDisabled m_attackDisabled;
+
 
         [SerializeField]
-        private PlayerData playerData;
+        protected PlayerData playerData;
 
         [SerializeField]
-        private PlayerControlsStateMachine playerControlsStateMachine;
+        protected PlayerControlsStateMachine playerControlsStateMachine;
 
         [SerializeField]
-        private Weapon.TrackingWeapon weapon;
+        protected Weapon.TrackingWeapon weapon;
 
         [SerializeField]
-        private PlayerCastView castView;
+        protected PlayerCastView autoAttackCastView;
 
         [SerializeField]
-        private float projectileSpeed, attackSpeedToCooldownMultiplier;
+        protected float projectileSpeed, attackSpeedToCooldownMultiplier;
 
         public PlayerControlsStateMachine _PlayerControlsStateMachine => playerControlsStateMachine;
 
         private void Awake()
         {
-            _attackCooldown = new AttackCooldown(playerData, this, attackSpeedToCooldownMultiplier * playerData._AttackSpeed); // Hardcoded cooldown between shots
-            _attackCharging = new AttackCharging(playerData, this);
-            _attackHalted = new AttackHalted(playerData, this);
-            ChangeState(_attackCharging);
+            m_attackCooldown = new AttackCooldown(playerData, this, attackSpeedToCooldownMultiplier * playerData._AttackSpeed);
+            m_attackCharging = new AttackCharging(playerData, this);
+            m_attackHalted = new AttackHalted(playerData, this);
+            m_attackDisabled = new AttackDisabled(playerData, this);
+            playerControlsStateMachine.m_enableAutoAttack += isAutoAttackEnabled =>
+            {
+                if (isAutoAttackEnabled)
+                {
+                    return;
+                }
+
+                DisableAttacks();
+                autoAttackCastView.ChangeViewState(PlayerCastView.ViewState.HIDDEN);
+            };
+            BeginAttackCharging();
         }
 
         private void FixedUpdate()
         {
-            _currentWeaponState.StateUpdate();
+            m_currentWeaponState.StateUpdate();
         }
 
-        private void ChangeState(PlayerWeaponState newWeaponState)
+        protected void ChangeState(PlayerWeaponState newWeaponState)
         {
-            _currentWeaponState?.OnStateExit();
-            _currentWeaponState = newWeaponState;
-            _currentWeaponState?.OnStateEnter();
+            m_currentWeaponState?.OnStateExit();
+            m_currentWeaponState = newWeaponState;
+            m_currentWeaponState?.OnStateEnter();
+        }
+
+        public void DisableAttacks()
+        {
+            ChangeState(m_attackDisabled);
         }
 
         public void HaltAttacks()
         {
-            ChangeState(_attackHalted);
-            castView.SetProgress(1.0f);
-            castView.ChangeViewState(PlayerCastView.ViewState.IDLE);
+            ChangeState(m_attackHalted);
+            autoAttackCastView.SetProgress(1.0f);
+            autoAttackCastView.ChangeViewState(PlayerCastView.ViewState.IDLE);
         }
 
         public void BeginAttackCharging()
         {
-            ChangeState(_attackCharging);
-            castView.SetProgress(0.0f);
-            castView.ChangeViewState(PlayerCastView.ViewState.CHARGING);
+            ChangeState(m_attackCharging);
+            autoAttackCastView.SetProgress(0.0f);
+            autoAttackCastView.ChangeViewState(PlayerCastView.ViewState.CHARGING);
         }
 
-        public void FireAutoAttack()
+        public void BeginAttackCooldown()
+        {
+            m_attackCooldown.SetCooldownLength(attackSpeedToCooldownMultiplier / playerData._AttackSpeed);
+            ChangeState(m_attackCooldown);
+            autoAttackCastView.SetProgress(1.0f);
+            autoAttackCastView.ChangeViewState(PlayerCastView.ViewState.COOLINGDOWN);
+        }
+
+        public virtual void FireAutoAttack()
         {
             TrackingProjectile projectile = weapon.FireProjectile(playerControlsStateMachine._AutoAttackTarget.transform, projectileSpeed);
             projectile.m_onHit += hit2Ds =>
@@ -78,15 +104,13 @@ namespace Code.Entity.Player.StateMachines
                     }
                 }
             };
-            _attackCooldown.SetCooldownLength(attackSpeedToCooldownMultiplier / playerData._AttackSpeed);
-            ChangeState(_attackCooldown);
-            castView.SetProgress(1.0f);
-            castView.ChangeViewState(PlayerCastView.ViewState.COOLINGDOWN);
+
+            BeginAttackCooldown();
         }
 
         public void SetViewProgress(float progress)
         {
-            castView.SetProgress(progress);
+            autoAttackCastView.SetProgress(progress);
         }
 
         private void OnDrawGizmosSelected()

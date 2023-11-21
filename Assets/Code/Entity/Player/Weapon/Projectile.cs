@@ -10,19 +10,18 @@ namespace Code.Entity.Player.Weapon
         public Action<RaycastHit2D[]> m_onHit;
         public Action<RaycastHit2D[]> m_onTrigger;
 
-        protected FireAndForgetWeapon m_firingFireAndForgetWeapon;
-        protected EntityPhysics _entityPhysics;
-        protected Vector2 _continuousForce;
+        protected EntityPhysics m_entityPhysics;
+        protected Vector2 m_continuousForce;
 
         private void Awake()
         {
-            _entityPhysics = GetComponent<EntityPhysics>();
+            m_entityPhysics = GetComponent<EntityPhysics>();
         }
 
         public virtual void FireProjectile(Vector2 newTravelDirection, float newSpeed)
         {
-            _continuousForce = newTravelDirection.normalized * newSpeed;
-            _entityPhysics.AddContinuousForce(_continuousForce);
+            m_continuousForce = newTravelDirection.normalized * newSpeed;
+            m_entityPhysics.AddContinuousForce(m_continuousForce);
             float angle = Mathf.Atan2(newTravelDirection.x, newTravelDirection.y) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.AngleAxis(angle, Vector3.back);
         }
@@ -41,16 +40,16 @@ namespace Code.Entity.Player.Weapon
 
         private void OnEnable()
         {
-            _entityPhysics.m_onRaycastCollisionsDetected += OnRaycastCollisionsDetected;
-            _entityPhysics.m_onRaycastTriggersDetected += OnRaycastTriggersDetected;
+            m_entityPhysics.m_onRaycastCollisionsDetected += OnRaycastCollisionsDetected;
+            m_entityPhysics.m_onRaycastTriggersDetected += OnRaycastTriggersDetected;
         }
 
         private void OnDisable()
         {
-            _entityPhysics.RemoveAllContinuousForces();
-            _continuousForce = Vector2.zero;
-            _entityPhysics.m_onRaycastCollisionsDetected -= OnRaycastCollisionsDetected;
-            _entityPhysics.m_onRaycastTriggersDetected -= OnRaycastTriggersDetected;
+            m_entityPhysics.RemoveAllContinuousForces();
+            m_continuousForce = Vector2.zero;
+            m_entityPhysics.m_onRaycastCollisionsDetected -= OnRaycastCollisionsDetected;
+            m_entityPhysics.m_onRaycastTriggersDetected -= OnRaycastTriggersDetected;
         }
     }
 }

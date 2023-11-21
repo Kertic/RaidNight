@@ -1019,7 +1019,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9245283, g: 0.55471724, b: 0.3270737, a: 1}
+  m_Color: {r: 0.9245283, g: 0.55471724, b: 0.3270737, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1427,7 +1427,7 @@ MonoBehaviour:
   playerData: {fileID: 8755925106836426027}
   playerControlsStateMachine: {fileID: 8755925106836426025}
   weapon: {fileID: 6168583815196744768}
-  castView: {fileID: 8755925105153396917}
+  autoAttackCastView: {fileID: 0}
   projectileSpeed: 10
   attackSpeedToCooldownMultiplier: 2
 --- !u!114 &6168583815196744768

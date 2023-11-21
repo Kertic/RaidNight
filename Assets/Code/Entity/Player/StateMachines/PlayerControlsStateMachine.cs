@@ -8,6 +8,7 @@ using Code.Entity.Player.Views;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Random = System.Random;
 
 namespace Code.Entity.Player.StateMachines
 {
@@ -23,18 +24,37 @@ namespace Code.Entity.Player.StateMachines
             NUMOFINPUTBUTTONS
         }
 
+        public struct AttackHaltHandle
+        {
+            private string _id;
+            private float _timestamp;
+
+            public AttackHaltHandle(string newID, float newTimestamp)
+            {
+                _id = newID;
+                _timestamp = newTimestamp;
+            }
+        }
+
         private static Controls _controls;
         private static Dictionary<InputAction, InputButton> _inputCallbacks;
 
-        [SerializeField] protected PlayerCam cam;
-        [SerializeField] protected TargetIndicatorView targetIndicatorView;
-        [SerializeField] protected PlayerCastView castBarView;
+        [SerializeField]
+        protected PlayerCam cam;
+
+        [SerializeField]
+        protected TargetIndicatorView targetIndicatorView;
+
+        [SerializeField]
+        protected PlayerCastView castBarView;
 
         private PlayerControlState _currentControlState;
+        private List<AttackHaltHandle> _handles;
         public Entity _AutoAttackTarget { get; private set; }
         public PlayerData _PlayerData { get; private set; }
         public Vector2 _MovementDirection { get; private set; }
         public EntityPhysics _EntityPhysics { get; private set; }
+        public bool _IsAutoAttackEnabled { get; protected set; }
         protected Idle _Idle { get; set; }
         protected Running _Running { get; set; }
         protected ExecuteSkill _PrimaryAttack { get; set; }
@@ -45,11 +65,14 @@ namespace Code.Entity.Player.StateMachines
         public Action m_haltAutoAttack;
         public Action m_resetAutoAttack;
         public Action m_resumeAutoAttack;
+        public Action<bool> m_enableAutoAttack;
 
         protected virtual void Awake()
         {
             _PlayerData = GetComponent<PlayerData>();
+            _IsAutoAttackEnabled = true;
             _EntityPhysics = GetComponent<EntityPhysics>();
+            _handles = new List<AttackHaltHandle>();
             castBarView.ChangeViewState(PlayerCastView.ViewState.HIDDEN);
             _currentControlState = _Idle = new Idle(_PlayerData, _EntityPhysics, this);
             _Running = new Running(_PlayerData, _EntityPhysics, this);
@@ -82,12 +105,10 @@ namespace Code.Entity.Player.StateMachines
             _controls.Disable();
         }
 
-        private void Start()
+        protected virtual void Start()
         {
             _currentControlState.OnStateEnter();
-            HaltAutoAttacks();
         }
-
 
         private void OnMovementInput(InputAction.CallbackContext context)
         {
@@ -181,20 +202,34 @@ namespace Code.Entity.Player.StateMachines
                 ChangeState(_Ultimate);
         }
 
-        public void HaltAutoAttacks()
+        public AttackHaltHandle HaltAutoAttacks()
         {
+            AttackHaltHandle newHandle = new(Unity.Mathematics.Random.CreateFromIndex((uint)Time.time).ToString(), Time.time);
+            _handles.Add(newHandle);
             m_haltAutoAttack?.Invoke();
+            return newHandle;
         }
 
-        public void ResumeAutoAttacks()
+        public void ReleaseAutoAttackHaltHandle(AttackHaltHandle handle)
         {
-            if (_AutoAttackTarget != null)
+            _handles.Remove(handle);
+            if (_handles.Count == 0)
                 m_resumeAutoAttack?.Invoke();
         }
 
         public void ResetAutoTimer()
         {
             m_resetAutoAttack?.Invoke();
+        }
+
+        public void SetAutoAttackEnabled(bool setAttackEnabled)
+        {
+            _IsAutoAttackEnabled = setAttackEnabled;
+            m_enableAutoAttack?.Invoke(setAttackEnabled);
+            if (setAttackEnabled && _handles.Count > 0)
+            {
+                m_haltAutoAttack?.Invoke();
+            }
         }
     }
 }

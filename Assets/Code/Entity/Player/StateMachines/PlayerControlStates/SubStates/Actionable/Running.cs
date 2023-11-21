@@ -4,6 +4,8 @@ namespace Code.Entity.Player.StateMachines.PlayerControlStates.SubStates.Actiona
 {
     public class Running : StateMachines.PlayerControlStates.SuperStates.Actionable
     {
+        private PlayerControlsStateMachine.AttackHaltHandle _haltHandle;
+
         protected Vector2 m_lastMovementVector;
         public Running(PlayerData data, EntityPhysics entityPhysics, PlayerControlsStateMachine controlsStateMachine) : base(data, entityPhysics, controlsStateMachine) { }
 
@@ -11,14 +13,14 @@ namespace Code.Entity.Player.StateMachines.PlayerControlStates.SubStates.Actiona
         {
             base.OnStateEnter();
             m_lastMovementVector = Vector2.zero;
-            m_controlsStateMachine.HaltAutoAttacks();
+            _haltHandle = m_controlsStateMachine.HaltAutoAttacks();
         }
 
         public override void OnStateExit()
         {
             base.OnStateExit();
             m_entityPhysics.RemoveContinuousForce(m_lastMovementVector);
-            m_controlsStateMachine.ResumeAutoAttacks();
+            m_controlsStateMachine.ReleaseAutoAttackHaltHandle(_haltHandle);
         }
 
         public override void OnReceiveMovementInput(Vector2 direction)

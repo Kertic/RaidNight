@@ -8,6 +8,7 @@ namespace Code.Entity.Player.StateMachines.PlayerControlStates.PlayerFaeArcherSt
     {
         private float _castTime;
         private float _castStart;
+        private PlayerControlsStateMachine.AttackHaltHandle _haltHandle;
         private PlayerCastView _castBar;
         private new PlayerFaeArcherStateMachine m_controlsStateMachine;
 
@@ -23,7 +24,7 @@ namespace Code.Entity.Player.StateMachines.PlayerControlStates.PlayerFaeArcherSt
             _castBar.SetProgress(0.0f);//TODO This shouldn't be in the state likely.
             _castBar.ChangeViewState(PlayerCastView.ViewState.CHARGING);
             _castBar.SetText("Enchanted Arrow");
-            m_controlsStateMachine.HaltAutoAttacks();
+            _haltHandle = m_controlsStateMachine.HaltAutoAttacks();
             _castStart = Time.time;
         }
 
@@ -33,7 +34,7 @@ namespace Code.Entity.Player.StateMachines.PlayerControlStates.PlayerFaeArcherSt
             _castBar.SetProgress(0.0f);
             _castBar.ChangeViewState(PlayerCastView.ViewState.HIDDEN);
             _castBar.SetText("");
-            m_controlsStateMachine.ResumeAutoAttacks();
+            m_controlsStateMachine.ReleaseAutoAttackHaltHandle(_haltHandle);
         }
 
         public override void StateUpdate()

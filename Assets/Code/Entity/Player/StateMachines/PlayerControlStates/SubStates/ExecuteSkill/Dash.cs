@@ -10,7 +10,7 @@ namespace Code.Entity.Player.StateMachines.PlayerControlStates.SubStates.Execute
         protected float m_dashDuration;
         protected Vector2 m_dashVector;
 
-        public Dash(PlayerData data, EntityPhysics entityPhysics, PlayerControlsStateMachine controlsStateMachine) : base(data, entityPhysics, controlsStateMachine) { }
+        public Dash(PlayerData data, EntityPhysics entityPhysics, PlayerControlsStateMachine controlsStateMachine, float cooldown) : base(data, entityPhysics, controlsStateMachine, cooldown) { }
 
         public void SetDashVectorAndDuration(Vector2 dashVector, float dashDuration)
         {

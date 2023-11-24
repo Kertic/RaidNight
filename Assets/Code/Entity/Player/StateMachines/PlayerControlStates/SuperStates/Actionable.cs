@@ -4,6 +4,8 @@ namespace Code.Entity.Player.StateMachines.PlayerControlStates.SuperStates
 {
     public abstract class Actionable : PlayerControlState
     {
+        public override void OnStateEnter() { }
+
         public override void OnStateExit() { }
 
         public override void OnReceiveMovementInput(Vector2 direction) { }

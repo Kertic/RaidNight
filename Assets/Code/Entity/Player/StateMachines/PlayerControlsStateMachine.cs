@@ -5,6 +5,7 @@ using Code.Entity.Player.StateMachines.PlayerControlStates;
 using Code.Entity.Player.StateMachines.PlayerControlStates.SubStates.Actionable;
 using Code.Entity.Player.StateMachines.PlayerControlStates.SuperStates;
 using Code.Entity.Player.Views;
+using Code.Systems.Views;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -45,8 +46,12 @@ namespace Code.Entity.Player.StateMachines
         [SerializeField]
         protected TargetIndicatorView targetIndicatorView;
 
+        [Header("Views")]
         [SerializeField]
         protected PlayerCastView castBarView;
+
+        [SerializeField]
+        protected SkillBarUIView skillBarUIView;
 
         private PlayerControlState _currentControlState;
         private List<AttackHaltHandle> _handles;
@@ -121,7 +126,7 @@ namespace Code.Entity.Player.StateMachines
             _currentControlState.OnReleaseMovementInput();
         }
 
-        private void Update()
+        protected virtual void Update()
         {
             Vector2 movementInputVector = _controls.Gameplay.Movement.ReadValue<Vector2>();
             _MovementDirection = movementInputVector;
@@ -180,26 +185,34 @@ namespace Code.Entity.Player.StateMachines
 
         public virtual void ChangeToPrimaryAttack()
         {
-            if (_PrimaryAttack != null)
+            if (_PrimaryAttack != null && _PrimaryAttack.IsSkillReady())
+            {
                 ChangeState(_PrimaryAttack);
+            }
         }
 
         public virtual void ChangeToSecondaryAttack()
         {
-            if (_SecondaryAttack != null)
+            if (_SecondaryAttack != null && _SecondaryAttack.IsSkillReady())
+            {
                 ChangeState(_SecondaryAttack);
+            }
         }
 
         public virtual void ChangeToDash()
         {
-            if (_Dash != null)
+            if (_Dash != null && _Dash.IsSkillReady())
+            {
                 ChangeState(_Dash);
+            }
         }
 
         public virtual void ChangeToUltimate()
         {
-            if (_Ultimate != null)
+            if (_Ultimate != null && _Ultimate.IsSkillReady())
+            {
                 ChangeState(_Ultimate);
+            }
         }
 
         public AttackHaltHandle HaltAutoAttacks()

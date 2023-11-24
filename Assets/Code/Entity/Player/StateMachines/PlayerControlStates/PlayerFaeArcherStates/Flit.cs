@@ -10,7 +10,7 @@ namespace Code.Entity.Player.StateMachines.PlayerControlStates.PlayerFaeArcherSt
         private float _dashDuration;
         private PlayerControlsStateMachine.AttackHaltHandle _haltHandle;
 
-        public Flit(PlayerData data, EntityPhysics entityPhysics, PlayerControlsStateMachine controlsStateMachine, float maxDashDistance, float dashDuration) : base(data, entityPhysics, controlsStateMachine)
+        public Flit(PlayerData data, EntityPhysics entityPhysics, PlayerControlsStateMachine controlsStateMachine, float maxDashDistance, float dashDuration, float cooldown) : base(data, entityPhysics, controlsStateMachine, cooldown)
         {
             _maxDashDistance = maxDashDistance;
             _dashDuration = dashDuration;

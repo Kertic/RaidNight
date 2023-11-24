@@ -1,6 +1,6 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Code.Systems.Views
 {
@@ -22,6 +22,17 @@ namespace Code.Systems.Views
             {
                 skillImages[i].SetSprite(sprites[i]);
             }
+        }
+
+        public SkillIconUIView GetIconUIView(int index)
+        {
+            index = Math.Clamp(index, 0, skillImages.Count - 1);
+            return skillImages?[index];
+        }
+
+        public int GetSkillCount()
+        {
+            return skillImages.Count;
         }
     }
 }

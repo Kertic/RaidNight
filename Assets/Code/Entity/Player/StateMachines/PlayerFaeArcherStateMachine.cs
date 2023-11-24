@@ -1,6 +1,8 @@
+using System;
 using Code.Entity.Player.StateMachines.PlayerControlStates.PlayerFaeArcherStates;
 using Code.Entity.Player.Views.FaeArcher;
 using Code.Entity.Player.Weapon;
+using UnityEditor;
 using UnityEngine;
 
 namespace Code.Entity.Player.StateMachines
@@ -23,14 +25,14 @@ namespace Code.Entity.Player.StateMachines
         private FireAndForgetWeapon enchantedArrowFireAndForgetWeapon;
 
         [SerializeField]
-        private float enchantedArrowProjectileSpeed, fireEnchantedArrowCastTime, enchantedArrowDamageMultiplier;
+        private float enchantedArrowProjectileSpeed, fireEnchantedArrowCastTime, enchantedArrowDamageMultiplier, enchantedArrowCooldown;
 
         [Header("Flit")]
         [SerializeField]
         private float flitMaxDistance;
 
         [SerializeField]
-        private float flitDuration;
+        private float flitDuration, flitCooldown;
 
         private int _currentWispCount;
 
@@ -45,12 +47,29 @@ namespace Code.Entity.Player.StateMachines
             AddMischiefCharge();
         }
 
+        private void OnValidate()
+        {
+            if (skillBarUIView != null && skillBarUIView.GetSkillCount() != 4)
+            {
+                Debug.LogError("ERROR: " + gameObject.name + " has been assigned a skill bar with " + skillBarUIView.GetSkillCount() + ". " + "It must have 4 skills.");
+                skillBarUIView = null;
+            }
+        }
+
         protected override void Awake()
         {
             base.Awake();
             _FaeArcherView = GetComponent<FaeArcherView>();
-            _Dash = _Flit = new Flit(_PlayerData, _EntityPhysics, this, flitMaxDistance, flitDuration);
-            _PrimaryAttack = _FireEnchantedArrow = new FireEnchantedArrow(_PlayerData, _EntityPhysics, this, castBarView);
+            _Dash = _Flit = new Flit(_PlayerData, _EntityPhysics, this, flitMaxDistance, flitDuration, flitCooldown);
+            _PrimaryAttack = _FireEnchantedArrow = new FireEnchantedArrow(_PlayerData, _EntityPhysics, this, castBarView, enchantedArrowCooldown);
+        }
+
+        protected override void Update()
+        {
+            base.Update();
+            Debug.Log("EnchArrow CD:" + _FireEnchantedArrow.GetPercentCooldownCompleted());
+            skillBarUIView.GetIconUIView(0).SetProgress(_FireEnchantedArrow.GetPercentCooldownCompleted() , _FireEnchantedArrow.GetTimeRemainingUntilReady());
+            skillBarUIView.GetIconUIView(2).SetProgress(_Flit.GetPercentCooldownCompleted(), _Flit.GetTimeRemainingUntilReady());
         }
 
         protected override void Start()

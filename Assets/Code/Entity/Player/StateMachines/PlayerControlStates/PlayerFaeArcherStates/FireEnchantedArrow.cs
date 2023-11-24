@@ -13,7 +13,7 @@ namespace Code.Entity.Player.StateMachines.PlayerControlStates.PlayerFaeArcherSt
         private PlayerCastView _castBar;
         private new PlayerFaeArcherStateMachine m_controlsStateMachine;
 
-        public FireEnchantedArrow(PlayerData data, EntityPhysics entityPhysics, PlayerFaeArcherStateMachine controlsStateMachine, PlayerCastView castView) : base(data, entityPhysics, controlsStateMachine)
+        public FireEnchantedArrow(PlayerData data, EntityPhysics entityPhysics, PlayerFaeArcherStateMachine controlsStateMachine, PlayerCastView castView, float cooldown) : base(data, entityPhysics, controlsStateMachine, cooldown)
         {
             m_controlsStateMachine = controlsStateMachine;
             _castBar = castView;
@@ -25,7 +25,7 @@ namespace Code.Entity.Player.StateMachines.PlayerControlStates.PlayerFaeArcherSt
             m_controlsStateMachine.FireEnchantedArrowWeapon(PlayerCam.mousePosition);
         }
 
-        private float GetProgress()
+        private float GetCastingProgress()
         {
             return (Time.time - _castStart) / _castTime;
         }
@@ -52,7 +52,7 @@ namespace Code.Entity.Player.StateMachines.PlayerControlStates.PlayerFaeArcherSt
         public override void StateUpdate()
         {
             base.StateUpdate();
-            _castBar.SetProgress(GetProgress());
+            _castBar.SetProgress(GetCastingProgress());
         }
 
         public override void OnReleaseButtonInput(PlayerControlsStateMachine.InputButton button)
@@ -61,12 +61,9 @@ namespace Code.Entity.Player.StateMachines.PlayerControlStates.PlayerFaeArcherSt
 
             switch (button)
             {
-                case PlayerControlsStateMachine.InputButton.DASH:
-                    FireArrow();
-                    m_controlsStateMachine.ChangeToDash();
-                    break;
                 case PlayerControlsStateMachine.InputButton.PRIMARY:
                     FireArrow();
+                    m_controlsStateMachine.ChangeToIdleState();
                     break;
             }
         }

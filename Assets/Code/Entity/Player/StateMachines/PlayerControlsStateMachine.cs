@@ -80,7 +80,7 @@ namespace Code.Entity.Player.StateMachines
             _inputCallbacks = new Dictionary<InputAction, InputButton>
             {
                 { _controls.Gameplay.PrimaryFire, InputButton.PRIMARY },
-                { _controls.Gameplay.SecondaryFire, InputButton.PRIMARY },
+                { _controls.Gameplay.SecondaryFire, InputButton.SECONDARY },
                 { _controls.Gameplay.Dash, InputButton.DASH },
                 { _controls.Gameplay.Ultimate, InputButton.ULTIMATE },
             };

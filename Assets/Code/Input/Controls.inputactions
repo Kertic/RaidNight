@@ -42,15 +42,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Interrupt",
-                    "type": "Button",
-                    "id": "da9a3e23-4cc7-40f8-8d3b-bf6f73b6596b",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Ultimate",
                     "type": "Button",
                     "id": "460dadf3-d4dd-47ef-b3e5-28a49de427a4",
@@ -164,17 +155,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "Dash",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "cd11fa77-91c1-4cad-b987-3c3bcfef182e",
-                    "path": "<Keyboard>/e",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Interrupt",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

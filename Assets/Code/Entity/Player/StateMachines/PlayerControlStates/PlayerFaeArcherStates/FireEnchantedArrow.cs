@@ -1,4 +1,5 @@
-﻿using Code.Camera;
+﻿using System;
+using Code.Camera;
 using Code.Entity.Player.Views;
 using UnityEngine;
 
@@ -18,10 +19,21 @@ namespace Code.Entity.Player.StateMachines.PlayerControlStates.PlayerFaeArcherSt
             _castBar = castView;
         }
 
+        private void FireArrow()
+        {
+            Debug.Log("Casting Complete");
+            m_controlsStateMachine.FireEnchantedArrowWeapon(PlayerCam.mousePosition);
+        }
+
+        private float GetProgress()
+        {
+            return (Time.time - _castStart) / _castTime;
+        }
+
         public override void OnStateEnter()
         {
             base.OnStateEnter();
-            _castBar.SetProgress(0.0f);//TODO This shouldn't be in the state likely.
+            _castBar.SetProgress(0.0f); //TODO This shouldn't be in the state likely.
             _castBar.ChangeViewState(PlayerCastView.ViewState.CHARGING);
             _castBar.SetText("Enchanted Arrow");
             _haltHandle = m_controlsStateMachine.HaltAutoAttacks();
@@ -40,12 +52,35 @@ namespace Code.Entity.Player.StateMachines.PlayerControlStates.PlayerFaeArcherSt
         public override void StateUpdate()
         {
             base.StateUpdate();
-            _castBar.SetProgress((Time.time - _castStart) / _castTime);
-            if (Time.time - _castStart >= _castTime)
+            _castBar.SetProgress(GetProgress());
+        }
+
+        public override void OnReleaseButtonInput(PlayerControlsStateMachine.InputButton button)
+        {
+            base.OnReleaseButtonInput(button);
+
+            switch (button)
             {
-                Debug.Log("Casting Complete");
-                m_controlsStateMachine.FireEnchantedArrowWeapon(PlayerCam.mousePosition);
-                m_controlsStateMachine.ChangeToIdleState();
+                case PlayerControlsStateMachine.InputButton.DASH:
+                    FireArrow();
+                    m_controlsStateMachine.ChangeToDash();
+                    break;
+                case PlayerControlsStateMachine.InputButton.PRIMARY:
+                    FireArrow();
+                    break;
+            }
+        }
+
+        public override void OnReceiveButtonInput(PlayerControlsStateMachine.InputButton button)
+        {
+            base.OnReceiveButtonInput(button);
+            
+            switch (button)
+            {
+                case PlayerControlsStateMachine.InputButton.DASH:
+                    FireArrow();
+                    m_controlsStateMachine.ChangeToDash();
+                    break;
             }
         }
 

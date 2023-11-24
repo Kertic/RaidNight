@@ -1,4 +1,5 @@
 using System;
+using Code.Systems;
 using UnityEngine;
 
 namespace Code.Entity
@@ -9,23 +10,25 @@ namespace Code.Entity
         [SerializeField]
         protected int maxHealth;
         
-        protected int currentHealth;
-        protected IEntityView _view;
+        protected int m_currentHealth;
+        protected IEntityView m_view;
 
         protected virtual void Awake()
         {
-            currentHealth = maxHealth;
+            m_currentHealth = maxHealth;
         }
 
         public virtual void TakeDamage(float damage)
         {
-            currentHealth = Math.Clamp(currentHealth - (int)damage, 0, maxHealth);
-            _view.SetHealthPercent((float)currentHealth / maxHealth);
+            m_currentHealth = Math.Clamp(m_currentHealth - (int)damage, 0, maxHealth);
+            m_view.SetHealthPercent((float)m_currentHealth / maxHealth);
             
-            if (currentHealth == 0.0f)
+            if (m_currentHealth == 0.0f)
             {
                 OnDeath();
             }
+            
+            GameMaster.m_instance.SpawnFloatingTextAtTransform(transform, damage.ToString("0"), Color.white);
         }
 
         protected abstract void OnDeath();

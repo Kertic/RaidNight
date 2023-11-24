@@ -347,7 +347,7 @@ MonoBehaviour:
   castBarView: {fileID: 4858175139143665954}
   maxWispCount: 3
   wispLauncher: {fileID: 2046571627}
-  wispLaunchSpeed: 2
+  wispLaunchSpeed: 9
   enchantedArrowFireAndForgetWeapon: {fileID: 2079363060}
   enchantedArrowProjectileSpeed: 12
   fireEnchantedArrowCastTime: 0.5

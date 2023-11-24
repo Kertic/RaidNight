@@ -35,7 +35,7 @@ namespace Code.Entity
 
         void Start()
         {
-            _view = dummyEntityView;
+            m_view = dummyEntityView;
             _cycleStart = cycleLocations[0];
             _cycleEnd = cycleLocations[1];
             _remainingCycleTime = cyclingTime;
@@ -63,15 +63,15 @@ namespace Code.Entity
 
         protected override void OnDeath()
         {
-            _view.SetHealthbarText("I have died.");
+            m_view.SetHealthbarText("I have died.");
         }
 
         public override void TakeDamage(float damage)
         {
-            if (currentHealth <= 0)
+            if (m_currentHealth <= 0)
             {
                 damage = -maxHealth;
-                _view.SetHealthbarText("");
+                m_view.SetHealthbarText("");
             }
 
             base.TakeDamage(damage);

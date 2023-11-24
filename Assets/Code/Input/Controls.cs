@@ -64,15 +64,6 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Interrupt"",
-                    ""type"": ""Button"",
-                    ""id"": ""da9a3e23-4cc7-40f8-8d3b-bf6f73b6596b"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Ultimate"",
                     ""type"": ""Button"",
                     ""id"": ""460dadf3-d4dd-47ef-b3e5-28a49de427a4"",
@@ -191,17 +182,6 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""cd11fa77-91c1-4cad-b987-3c3bcfef182e"",
-                    ""path"": ""<Keyboard>/e"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Interrupt"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""51771b0d-43ec-4be7-85d8-38f6c5c8efd4"",
                     ""path"": ""<Keyboard>/r"",
                     ""interactions"": """",
@@ -288,7 +268,6 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         m_Gameplay_PrimaryFire = m_Gameplay.FindAction("PrimaryFire", throwIfNotFound: true);
         m_Gameplay_SecondaryFire = m_Gameplay.FindAction("SecondaryFire", throwIfNotFound: true);
         m_Gameplay_Dash = m_Gameplay.FindAction("Dash", throwIfNotFound: true);
-        m_Gameplay_Interrupt = m_Gameplay.FindAction("Interrupt", throwIfNotFound: true);
         m_Gameplay_Ultimate = m_Gameplay.FindAction("Ultimate", throwIfNotFound: true);
         m_Gameplay_Zoom = m_Gameplay.FindAction("Zoom", throwIfNotFound: true);
         m_Gameplay_MousePos = m_Gameplay.FindAction("MousePos", throwIfNotFound: true);
@@ -355,7 +334,6 @@ public partial class @Controls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_PrimaryFire;
     private readonly InputAction m_Gameplay_SecondaryFire;
     private readonly InputAction m_Gameplay_Dash;
-    private readonly InputAction m_Gameplay_Interrupt;
     private readonly InputAction m_Gameplay_Ultimate;
     private readonly InputAction m_Gameplay_Zoom;
     private readonly InputAction m_Gameplay_MousePos;
@@ -367,7 +345,6 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         public InputAction @PrimaryFire => m_Wrapper.m_Gameplay_PrimaryFire;
         public InputAction @SecondaryFire => m_Wrapper.m_Gameplay_SecondaryFire;
         public InputAction @Dash => m_Wrapper.m_Gameplay_Dash;
-        public InputAction @Interrupt => m_Wrapper.m_Gameplay_Interrupt;
         public InputAction @Ultimate => m_Wrapper.m_Gameplay_Ultimate;
         public InputAction @Zoom => m_Wrapper.m_Gameplay_Zoom;
         public InputAction @MousePos => m_Wrapper.m_Gameplay_MousePos;
@@ -392,9 +369,6 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @Dash.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnDash;
                 @Dash.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnDash;
                 @Dash.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnDash;
-                @Interrupt.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnInterrupt;
-                @Interrupt.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnInterrupt;
-                @Interrupt.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnInterrupt;
                 @Ultimate.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnUltimate;
                 @Ultimate.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnUltimate;
                 @Ultimate.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnUltimate;
@@ -420,9 +394,6 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @Dash.started += instance.OnDash;
                 @Dash.performed += instance.OnDash;
                 @Dash.canceled += instance.OnDash;
-                @Interrupt.started += instance.OnInterrupt;
-                @Interrupt.performed += instance.OnInterrupt;
-                @Interrupt.canceled += instance.OnInterrupt;
                 @Ultimate.started += instance.OnUltimate;
                 @Ultimate.performed += instance.OnUltimate;
                 @Ultimate.canceled += instance.OnUltimate;
@@ -442,7 +413,6 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         void OnPrimaryFire(InputAction.CallbackContext context);
         void OnSecondaryFire(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
-        void OnInterrupt(InputAction.CallbackContext context);
         void OnUltimate(InputAction.CallbackContext context);
         void OnZoom(InputAction.CallbackContext context);
         void OnMousePos(InputAction.CallbackContext context);

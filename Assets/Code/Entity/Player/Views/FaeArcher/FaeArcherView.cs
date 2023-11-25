@@ -19,12 +19,14 @@ namespace Code.Entity.Player.Views.FaeArcher
         private ObjectPool<WispView> _wispSprites;
         private List<WispView> _activeWisps;
 
-        // Start is called before the first frame update
-        void Start()
+        private void Awake()
         {
-            _activeWisps = new List<WispView>();
             _wispSprites = new ObjectPool<WispView>(SpawnWisp, OnGetFromPool, OnReturnToPool, OnDestroyWisp);
+            _activeWisps = new List<WispView>();
         }
+
+        // Start is called before the first frame update
+        void Start() { }
 
         // Update is called once per frame
         void Update()

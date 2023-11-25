@@ -6,10 +6,9 @@ using Code.Entity.Player.StateMachines.PlayerControlStates.SubStates.Actionable;
 using Code.Entity.Player.StateMachines.PlayerControlStates.SuperStates;
 using Code.Entity.Player.Views;
 using Code.Systems.Views;
-using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Random = System.Random;
+using Random = UnityEngine.Random;
 
 namespace Code.Entity.Player.StateMachines
 {
@@ -72,8 +71,14 @@ namespace Code.Entity.Player.StateMachines
         public Action m_resumeAutoAttack;
         public Action<bool> m_enableAutoAttack;
 
+        public static bool DidEffectProc(float procChance, float luckStat)
+        {
+            return Random.Range(0.0f, 1.0f) <=  1.0f - Mathf.Pow((1.0f - procChance), luckStat + 1.0f);
+        }
+
         protected virtual void Awake()
         {
+
             _PlayerData = GetComponent<PlayerData>();
             _IsAutoAttackEnabled = true;
             _EntityPhysics = GetComponent<EntityPhysics>();
@@ -99,6 +104,7 @@ namespace Code.Entity.Player.StateMachines
                 action.Key.canceled += (InputAction.CallbackContext context) => { _currentControlState.OnReleaseButtonInput(action.Value); };
             }
         }
+
 
         private void OnEnable()
         {

@@ -1,18 +1,23 @@
+using System;
 using UnityEngine;
 using UnityEngine.Pool;
 
 namespace Code.Entity.Player.Weapon
 {
-    public abstract class Weapon <TProjectile>: MonoBehaviour, IWeapon<TProjectile> where TProjectile : Projectile
+    public abstract class Weapon<TProjectile> : MonoBehaviour, IWeapon<TProjectile> where TProjectile : Projectile
     {
-        [SerializeField] protected TProjectile projectilePrefab;
+        [SerializeField]
+        protected TProjectile projectilePrefab;
+
         private ObjectPool<TProjectile> _projectilePool;
 
-        private void Start()
+        private void Awake()
         {
             _projectilePool = new ObjectPool<TProjectile>(SpawnProjectile, OnGetFromPool, OnReturnToPool,
                 OnDestroyProjectile, true, 10, 500);
         }
+
+        private void Start() { }
 
         #region Projectile Pool Functions
 

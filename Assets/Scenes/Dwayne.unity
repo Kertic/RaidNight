@@ -3929,6 +3929,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1839857876071113438, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
+      propertyPath: luck
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1839857876071113438, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
+      propertyPath: attackSpeed
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 5405098573614200258, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
       propertyPath: cam
       value: 
@@ -3937,6 +3945,14 @@ PrefabInstance:
       propertyPath: skillBarUIView
       value: 
       objectReference: {fileID: 1087644062}
+    - target: {fileID: 5405098573614200258, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
+      propertyPath: mischiefProcChance
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5405098573614200258, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
+      propertyPath: enchantedArrowCooldown
+      value: 0.01
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
 --- !u!224 &3295558874927957164 stripped

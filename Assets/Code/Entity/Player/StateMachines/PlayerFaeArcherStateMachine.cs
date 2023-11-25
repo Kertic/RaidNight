@@ -1,8 +1,6 @@
-using System;
 using Code.Entity.Player.StateMachines.PlayerControlStates.PlayerFaeArcherStates;
 using Code.Entity.Player.Views.FaeArcher;
 using Code.Entity.Player.Weapon;
-using UnityEditor;
 using UnityEngine;
 
 namespace Code.Entity.Player.StateMachines
@@ -13,6 +11,9 @@ namespace Code.Entity.Player.StateMachines
         [Header("Passive")]
         [SerializeField]
         private int maxWispCount;
+
+        [SerializeField]
+        private float mischiefProcChance;
 
         [SerializeField]
         private TrackingWeapon wispLauncher;
@@ -44,7 +45,7 @@ namespace Code.Entity.Player.StateMachines
         {
             hitEntity.TakeDamage(enchantedArrowDamageMultiplier * _PlayerData._BaseAttackDamage);
             SetAutoAttackTarget(hitEntity);
-            AddMischiefCharge();
+            PotentiallyAddMischiefCharge();
         }
 
         private void OnValidate()
@@ -67,8 +68,7 @@ namespace Code.Entity.Player.StateMachines
         protected override void Update()
         {
             base.Update();
-            Debug.Log("EnchArrow CD:" + _FireEnchantedArrow.GetPercentCooldownCompleted());
-            skillBarUIView.GetIconUIView(0).SetProgress(_FireEnchantedArrow.GetPercentCooldownCompleted() , _FireEnchantedArrow.GetTimeRemainingUntilReady());
+            skillBarUIView.GetIconUIView(0).SetProgress(_FireEnchantedArrow.GetPercentCooldownCompleted(), _FireEnchantedArrow.GetTimeRemainingUntilReady());
             skillBarUIView.GetIconUIView(2).SetProgress(_Flit.GetPercentCooldownCompleted(), _Flit.GetTimeRemainingUntilReady());
         }
 
@@ -76,6 +76,11 @@ namespace Code.Entity.Player.StateMachines
         {
             base.Start();
             SetAutoAttackEnabled(false);
+            int sampleCount = 10000;
+            for (int i = 0; i < sampleCount; i++)
+            {
+                PotentiallyAddMischiefChargeDryRun();
+            }
         }
 
         public override void ChangeToPrimaryAttack()
@@ -107,13 +112,41 @@ namespace Code.Entity.Player.StateMachines
             };
         }
 
-        public void AddMischiefCharge()
+        public void PotentiallyAddMischiefCharge()
         {
-            if (_currentWispCount == maxWispCount)
+            if (_currentWispCount == maxWispCount || mischiefProcChance == 0.0f)
+            {
                 return;
+            }
+
+            Debug.Log("proc: " + mischiefProcChance + " luck: " + _PlayerData._LuckChance);
+            if (!DidEffectProc(mischiefProcChance, _PlayerData._LuckChance))
+            {
+                Debug.Log("REAL Failed Roll");
+                return;
+            }
+
+            Debug.Log("REAL Succeeded Roll");
             _FaeArcherView.AddWisp();
             SetAutoAttackEnabled(true);
             _currentWispCount++;
+        }
+
+        public void PotentiallyAddMischiefChargeDryRun()
+        {
+            if (_currentWispCount == maxWispCount || mischiefProcChance == 0.0f)
+            {
+                return;
+            }
+
+            Debug.Log("proc: " + mischiefProcChance + " luck: " + _PlayerData._LuckChance);
+            if (!DidEffectProc(mischiefProcChance, _PlayerData._LuckChance))
+            {
+                Debug.Log("Failed Roll");
+                return;
+            }
+
+            Debug.Log("Succeeded Roll");
         }
 
         public void RemoveMischiefCharge()

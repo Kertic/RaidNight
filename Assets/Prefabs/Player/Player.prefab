@@ -1095,6 +1095,7 @@ MonoBehaviour:
   cam: {fileID: 0}
   targetIndicatorView: {fileID: 7764245092452230937}
   castBarView: {fileID: 2549181490844821207}
+  skillBarUIView: {fileID: 0}
 --- !u!212 &8755925106836426030
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1209,6 +1210,7 @@ MonoBehaviour:
   moveSpeed: 1
   attackSpeed: 2
   baseAttackDamage: 32
+  luck: 0
 --- !u!114 &8755925106836426024
 MonoBehaviour:
   m_ObjectHideFlags: 0

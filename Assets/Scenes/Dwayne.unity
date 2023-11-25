@@ -3946,8 +3946,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1087644062}
     - target: {fileID: 5405098573614200258, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
+      propertyPath: faeAssaultCooldown
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5405098573614200258, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
+      propertyPath: faeAssaultDuration
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5405098573614200258, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
       propertyPath: mischiefProcChance
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5405098573614200258, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
+      propertyPath: faeAssaultMaxDistance
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5405098573614200258, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
       propertyPath: enchantedArrowCooldown

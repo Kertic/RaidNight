@@ -15,18 +15,19 @@ namespace Code.Entity.Player.StateMachines
         [SerializeField]
         private float mischiefProcChance;
 
-        [SerializeField]
-        private TrackingWeapon wispLauncher;
-
-        [SerializeField]
-        private float wispLaunchSpeed;
-
         [Header("Enchanted Arrow")]
         [SerializeField]
         private FireAndForgetWeapon enchantedArrowFireAndForgetWeapon;
 
         [SerializeField]
         private float enchantedArrowProjectileSpeed, fireEnchantedArrowCastTime, enchantedArrowDamageMultiplier, enchantedArrowCooldown;
+
+        [Header("Fae Assault")]
+        [SerializeField]
+        private float faeAssaultMaxDistance;
+
+        [SerializeField]
+        private float faeAssaultDuration, faeAssaultCooldown;
 
         [Header("Flit")]
         [SerializeField]
@@ -39,12 +40,21 @@ namespace Code.Entity.Player.StateMachines
 
         private Flit _Flit { get; set; }
         private FireEnchantedArrow _FireEnchantedArrow { get; set; }
+        private FaeAssault _FaeAssault { get; set; }
         public FaeArcherView _FaeArcherView { get; private set; }
 
         private void EnchantedArrowOnEntityHit(Entity hitEntity)
         {
             hitEntity.TakeDamage(enchantedArrowDamageMultiplier * _PlayerData._BaseAttackDamage);
             SetAutoAttackTarget(hitEntity);
+            if (_currentWispCount > 0)
+            {
+                var oldProcChance = mischiefProcChance;
+                mischiefProcChance = 1.0f;
+                PotentiallyAddMischiefCharge();
+                mischiefProcChance = oldProcChance;
+            }
+
             PotentiallyAddMischiefCharge();
         }
 
@@ -63,12 +73,14 @@ namespace Code.Entity.Player.StateMachines
             _FaeArcherView = GetComponent<FaeArcherView>();
             _Dash = _Flit = new Flit(_PlayerData, _EntityPhysics, this, flitMaxDistance, flitDuration, flitCooldown);
             _PrimaryAttack = _FireEnchantedArrow = new FireEnchantedArrow(_PlayerData, _EntityPhysics, this, castBarView, enchantedArrowCooldown);
+            _SecondaryAttack = _FaeAssault = new FaeAssault(_PlayerData, _EntityPhysics, this, faeAssaultMaxDistance, faeAssaultDuration, faeAssaultCooldown);
         }
 
         protected override void Update()
         {
             base.Update();
             skillBarUIView.GetIconUIView(0).SetProgress(_FireEnchantedArrow.GetPercentCooldownCompleted(), _FireEnchantedArrow.GetTimeRemainingUntilReady());
+            skillBarUIView.GetIconUIView(1).SetProgress(_FaeAssault.GetPercentCooldownCompleted(), _FaeAssault.GetTimeRemainingUntilReady());
             skillBarUIView.GetIconUIView(2).SetProgress(_Flit.GetPercentCooldownCompleted(), _Flit.GetTimeRemainingUntilReady());
         }
 
@@ -76,11 +88,6 @@ namespace Code.Entity.Player.StateMachines
         {
             base.Start();
             SetAutoAttackEnabled(false);
-            int sampleCount = 10000;
-            for (int i = 0; i < sampleCount; i++)
-            {
-                PotentiallyAddMischiefChargeDryRun();
-            }
         }
 
         public override void ChangeToPrimaryAttack()
@@ -94,6 +101,23 @@ namespace Code.Entity.Player.StateMachines
             _Flit.SetDashDuration(flitDuration);
             _Flit.SetDashDistance(flitMaxDistance);
             base.ChangeToDash();
+        }
+
+        public override void ChangeToSecondaryAttack()
+        {
+            _FaeAssault.SetDashDuration(faeAssaultDuration);
+            _FaeAssault.SetDashDistance(faeAssaultMaxDistance);
+
+            if (_SecondaryAttack != null && _SecondaryAttack.IsSkillReady())
+            {
+                if (ConsumeWispCharge()) // TODO: This likely shouldn't need to be an identical check to the parents check
+                {
+                    _FaeAssault.SetIsEnhancedFromMischiefStack(true);
+                }
+            }
+
+
+            base.ChangeToSecondaryAttack();
         }
 
         public void FireEnchantedArrowWeapon(Vector2 targetLocation)
@@ -119,50 +143,31 @@ namespace Code.Entity.Player.StateMachines
                 return;
             }
 
-            Debug.Log("proc: " + mischiefProcChance + " luck: " + _PlayerData._LuckChance);
             if (!DidEffectProc(mischiefProcChance, _PlayerData._LuckChance))
             {
-                Debug.Log("REAL Failed Roll");
                 return;
             }
 
-            Debug.Log("REAL Succeeded Roll");
             _FaeArcherView.AddWisp();
             SetAutoAttackEnabled(true);
             _currentWispCount++;
         }
 
-        public void PotentiallyAddMischiefChargeDryRun()
-        {
-            if (_currentWispCount == maxWispCount || mischiefProcChance == 0.0f)
-            {
-                return;
-            }
-
-            Debug.Log("proc: " + mischiefProcChance + " luck: " + _PlayerData._LuckChance);
-            if (!DidEffectProc(mischiefProcChance, _PlayerData._LuckChance))
-            {
-                Debug.Log("Failed Roll");
-                return;
-            }
-
-            Debug.Log("Succeeded Roll");
-        }
-
-        public void RemoveMischiefCharge()
+        public bool RemoveMischiefCharge()
         {
             if (_currentWispCount == 0)
-                return;
+                return false;
             _FaeArcherView.RemoveWisp();
             _currentWispCount--;
             if (_currentWispCount <= 0)
                 SetAutoAttackEnabled(false);
+            return true;
         }
 
-        public void LaunchWispAttack(Transform target)
+        public bool ConsumeWispCharge()
         {
-            // Do ONHits here
-            wispLauncher.FireProjectile(target, wispLaunchSpeed); // Animate wisp attack               
+            return RemoveMischiefCharge();
+            // Reduce Ultimate cooldown by one second
         }
     }
 }

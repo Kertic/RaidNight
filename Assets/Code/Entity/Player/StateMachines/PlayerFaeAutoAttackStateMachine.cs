@@ -15,10 +15,11 @@ namespace Code.Entity.Player.StateMachines
 
         public override void FireAutoAttack()
         {
+            return;
             TrackingProjectile projectile = weapon.FireProjectile(playerControlsStateMachine._AutoAttackTarget.transform, projectileSpeed);
             var targetTrans = playerControlsStateMachine._AutoAttackTarget.transform;
             BeginAttackCooldown();
-            _PlayerControlsStateMachine.RemoveMischiefCharge();
+            _PlayerControlsStateMachine.RemoveMischiefCharge();//TODO: This needs to move into being a buff that's consumed instead.
 
             projectile.m_onHit += hit2Ds =>
             {
@@ -28,7 +29,7 @@ namespace Code.Entity.Player.StateMachines
                     if (entity != null)
                     {
                         entity.TakeDamage(playerData._BaseAttackDamage);
-                        _PlayerControlsStateMachine.LaunchWispAttack(targetTrans);
+                        _PlayerControlsStateMachine.ConsumeWispCharge();
                     }
                 }
             };

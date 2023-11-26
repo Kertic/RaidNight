@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace Code.Entity.Player.StateMachines.PlayerControlStates.PlayerFaeArcherStates
 {
-    public class Flit : ExecuteSkill
+    public class Flit : ExecuteFaeSkill
     {
         private float _maxDashDistance;
         private float _dashDuration;
         private PlayerControlsStateMachine.AttackHaltHandle _haltHandle;
 
-        public Flit(PlayerData data, EntityPhysics entityPhysics, PlayerControlsStateMachine controlsStateMachine, float maxDashDistance, float dashDuration, float cooldown) : base(data, entityPhysics, controlsStateMachine, cooldown)
+        public Flit(PlayerData data, EntityPhysics entityPhysics, PlayerFaeArcherStateMachine controlsStateMachine, float maxDashDistance, float dashDuration, float cooldown) : base(data, entityPhysics, controlsStateMachine, cooldown)
         {
             _maxDashDistance = maxDashDistance;
             _dashDuration = dashDuration;
@@ -31,6 +31,7 @@ namespace Code.Entity.Player.StateMachines.PlayerControlStates.PlayerFaeArcherSt
         {
             base.OnStateExit();
             m_controlsStateMachine.ReleaseAutoAttackHaltHandle(_haltHandle);
+            m_controlsStateMachine.AddWispCharge();
         }
 
         public void SetDashDistance(float newDashDistance)

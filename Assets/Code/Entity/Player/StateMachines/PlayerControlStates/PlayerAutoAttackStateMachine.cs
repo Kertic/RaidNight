@@ -1,10 +1,10 @@
 ﻿using Code.Camera;
-using Code.Entity.Player.StateMachines.PlayerWeaponStates;
 using Code.Entity.Player.Views;
 using Code.Entity.Player.Weapon;
+using Code.Entity.Player.Weapon.PlayerWeaponStates;
 using UnityEngine;
 
-namespace Code.Entity.Player.StateMachines
+namespace Code.Entity.Player.StateMachines.PlayerControlStates
 {
     public class PlayerAutoAttackStateMachine : MonoBehaviour
     {

@@ -13,7 +13,6 @@ namespace Code.Entity.Player.Weapon
             Vector2 newTravelForce = (_trackedTarget.position - transform.position).normalized * _firedSpeed;
             if (m_continuousForce != newTravelForce)
             {
-                Debug.Log("Changing Direction");
                 m_entityPhysics.RemoveAllContinuousForces();
                 FireProjectile((_trackedTarget.position - transform.position).normalized, _firedSpeed);
             }

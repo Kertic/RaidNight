@@ -1,4 +1,7 @@
-namespace Code.Entity.Player.StateMachines.PlayerWeaponStates
+using Code.Entity.Player.StateMachines;
+using Code.Entity.Player.StateMachines.PlayerControlStates;
+
+namespace Code.Entity.Player.Weapon.PlayerWeaponStates
 {
     public abstract class PlayerWeaponState : State
     {

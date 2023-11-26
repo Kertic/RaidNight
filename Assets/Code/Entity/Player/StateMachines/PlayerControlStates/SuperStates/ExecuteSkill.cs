@@ -41,6 +41,11 @@ namespace Code.Entity.Player.StateMachines.PlayerControlStates.SuperStates
             return GetTimeRemainingUntilReady() / m_maxCooldown;
         }
 
+        public void ReduceCooldown(float reductionTime)
+        {
+            m_timeWhenAvailable = MathF.Min(m_timeWhenAvailable - reductionTime, Time.time);
+        }
+
         public ExecuteSkill(PlayerData data, EntityPhysics entityPhysics, PlayerControlsStateMachine controlsStateMachine, float cooldown) : base(data, entityPhysics, controlsStateMachine)
         {
             m_maxCooldown = cooldown;

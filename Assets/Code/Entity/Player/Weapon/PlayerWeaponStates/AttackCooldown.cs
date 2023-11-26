@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using Code.Entity.Player.StateMachines.PlayerControlStates;
+using UnityEngine;
 
-namespace Code.Entity.Player.StateMachines.PlayerWeaponStates
+namespace Code.Entity.Player.Weapon.PlayerWeaponStates
 {
     public class AttackCooldown : PlayerWeaponState
     {

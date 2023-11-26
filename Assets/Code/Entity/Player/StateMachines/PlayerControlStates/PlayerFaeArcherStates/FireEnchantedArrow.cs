@@ -1,27 +1,23 @@
-﻿using System;
-using Code.Camera;
+﻿using Code.Camera;
 using Code.Entity.Player.Views;
 using UnityEngine;
 
 namespace Code.Entity.Player.StateMachines.PlayerControlStates.PlayerFaeArcherStates
 {
-    public class FireEnchantedArrow : SuperStates.ExecuteSkill
+    public class FireEnchantedArrow : ExecuteFaeSkill
     {
         private float _castTime;
         private float _castStart;
         private PlayerControlsStateMachine.AttackHaltHandle _haltHandle;
         private PlayerCastView _castBar;
-        private new PlayerFaeArcherStateMachine m_controlsStateMachine;
 
         public FireEnchantedArrow(PlayerData data, EntityPhysics entityPhysics, PlayerFaeArcherStateMachine controlsStateMachine, PlayerCastView castView, float cooldown) : base(data, entityPhysics, controlsStateMachine, cooldown)
         {
-            m_controlsStateMachine = controlsStateMachine;
             _castBar = castView;
         }
 
         private void FireArrow()
         {
-            Debug.Log("Casting Complete");
             m_controlsStateMachine.FireEnchantedArrowWeapon(PlayerCam.mousePosition);
         }
 
@@ -47,6 +43,7 @@ namespace Code.Entity.Player.StateMachines.PlayerControlStates.PlayerFaeArcherSt
             _castBar.ChangeViewState(PlayerCastView.ViewState.HIDDEN);
             _castBar.SetText("");
             m_controlsStateMachine.ReleaseAutoAttackHaltHandle(_haltHandle);
+            m_controlsStateMachine.AddWispCharge();
         }
 
         public override void StateUpdate()

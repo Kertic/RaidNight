@@ -155,6 +155,14 @@ PrefabInstance:
       propertyPath: m_fontColorGradient.topLeft.r
       value: 0.9811321
       objectReference: {fileID: 0}
+    - target: {fileID: 6168583815196744768, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
+      propertyPath: projectilePrefab
+      value: 
+      objectReference: {fileID: 6431110804601790196, guid: 93fd65079639ea04b86d784fbff7fb48, type: 3}
+    - target: {fileID: 8755925105153396923, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8755925106638900893, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
       propertyPath: m_PresetInfoIsWorld
       value: 1
@@ -275,6 +283,10 @@ PrefabInstance:
       propertyPath: playerControlsStateMachine
       value: 
       objectReference: {fileID: 5405098573614200258}
+    - target: {fileID: 8755925106897326582, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
+      propertyPath: m_Name
+      value: MischiefWeapon
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8755925106836426025, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
     - {fileID: 8755925106897326579, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
@@ -290,29 +302,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0708fd31a711ed74790588302ba48b34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1839857875997867523 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8755925106897326582, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
-  m_PrefabInstance: {fileID: 6920686292133261301}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &3295558874927957169
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1839857875997867523}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 997ed5fe250f520448ce067fa1d180a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerData: {fileID: 1839857876071113438}
-  playerControlsStateMachine: {fileID: 5405098573614200258}
-  weapon: {fileID: 3859586872657458101}
-  autoAttackCastView: {fileID: 1839857877743009600}
-  projectileSpeed: 10
-  attackSpeedToCooldownMultiplier: 1
 --- !u!1 &1839857876071113414 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8755925106836426035, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
@@ -332,8 +321,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   circleCenterTransform: {fileID: 1839857876071113425}
   wispTemplate: {fileID: 2273119222524783909, guid: 7e64cd21db7a0554cb47db29569398da, type: 3}
-  wispRadius: 1
-  wispSpinSpeed: 1
+  mischiefTemplate: {fileID: 161805944922596987, guid: 3901eb263919b6b45a1a698072445537, type: 3}
+  mischiefRadius: 0.7
+  mischiefSpinSpeed: 1
+  wispRadius: 0.2
+  wispSpinSpeedMultiplier: -1.5
+  wispAttackingModifier: 1.5
 --- !u!114 &5405098573614200258
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -350,50 +343,33 @@ MonoBehaviour:
   targetIndicatorView: {fileID: 849795244230428908}
   castBarView: {fileID: 4858175139143665954}
   skillBarUIView: {fileID: 0}
+  mischiefWeapon: {fileID: 3859586872657458101}
+  mischiefProjectileSpeed: 2
   maxWispCount: 3
-  wispLauncher: {fileID: 2046571627}
-  wispLaunchSpeed: 9
   enchantedArrowFireAndForgetWeapon: {fileID: 2079363060}
   enchantedArrowProjectileSpeed: 12
   fireEnchantedArrowCastTime: 0.5
   enchantedArrowDamageMultiplier: 1
   enchantedArrowCooldown: 3
+  faeAssaultMaxDistance: 1
+  faeAssaultDuration: 1
+  faeAssaultCooldown: 3
   flitMaxDistance: 1
   flitDuration: 0.07
   flitCooldown: 2
+  communeCooldown: 1
+  communeAbilityReductionTime: 1000
 --- !u!224 &1839857876071113425 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8755925106836426020, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
   m_PrefabInstance: {fileID: 6920686292133261301}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1839857876071113438 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8755925106836426027, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
-  m_PrefabInstance: {fileID: 6920686292133261301}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1839857876071113414}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d65d18868e55654583e350e43275119, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1839857877743009600 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8755925105153396917, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
-  m_PrefabInstance: {fileID: 6920686292133261301}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4c98970f3319db40b883c0c0ffa1e3e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3859586872657458101 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6168583815196744768, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
   m_PrefabInstance: {fileID: 6920686292133261301}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1839857875997867523}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e396c3ffd4b0224680bfb4aeb535ce8, type: 3}

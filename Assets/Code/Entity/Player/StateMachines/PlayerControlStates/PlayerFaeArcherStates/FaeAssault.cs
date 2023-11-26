@@ -5,19 +5,17 @@ using UnityEngine;
 
 namespace Code.Entity.Player.StateMachines.PlayerControlStates.PlayerFaeArcherStates
 {
-    public class FaeAssault : ExecuteSkill
+    public class FaeAssault : ExecuteFaeSkill
     {
         private float _maxDashDistance;
         private float _dashDuration;
         private float _testStartTime;
-        private bool _isEnhanced; // TODO: This should likely just be it's own state
         private PlayerControlsStateMachine.AttackHaltHandle _haltHandle;
 
-        public FaeAssault(PlayerData data, EntityPhysics entityPhysics, PlayerControlsStateMachine controlsStateMachine, float maxDashDistance, float dashDuration, float cooldown) : base(data, entityPhysics, controlsStateMachine, cooldown)
+        public FaeAssault(PlayerData data, EntityPhysics entityPhysics, PlayerFaeArcherStateMachine controlsStateMachine, float maxDashDistance, float dashDuration, float cooldown) : base(data, entityPhysics, controlsStateMachine, cooldown)
         {
             _maxDashDistance = maxDashDistance;
             _dashDuration = dashDuration;
-            _isEnhanced = false;
         }
 
         public override void OnStateEnter()
@@ -37,14 +35,8 @@ namespace Code.Entity.Player.StateMachines.PlayerControlStates.PlayerFaeArcherSt
         public override void OnStateExit()
         {
             base.OnStateExit();
-            Debug.Log("End duration: " + (Time.time - _testStartTime));
-            if (_isEnhanced)
-            {
-                m_timeWhenAvailable = m_maxCooldown * 0.5f + Time.time;
-                _isEnhanced = false;
-            }
-
             m_controlsStateMachine.ReleaseAutoAttackHaltHandle(_haltHandle);
+            m_controlsStateMachine.AddWispCharge();
         }
 
         public void SetDashDistance(float newDashDistance)
@@ -55,11 +47,6 @@ namespace Code.Entity.Player.StateMachines.PlayerControlStates.PlayerFaeArcherSt
         public void SetDashDuration(float newDashDuration)
         {
             _dashDuration = newDashDuration;
-        }
-
-        public void SetIsEnhancedFromMischiefStack(bool isEnhanced)
-        {
-            _isEnhanced = isEnhanced;
         }
     }
 }

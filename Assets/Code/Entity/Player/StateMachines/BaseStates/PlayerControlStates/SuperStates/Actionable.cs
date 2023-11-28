@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Code.Entity.Player.StateMachines.PlayerControlStates.SuperStates
+namespace Code.Entity.Player.StateMachines.BaseStates.PlayerControlStates.SuperStates
 {
     public abstract class Actionable : PlayerControlState
     {

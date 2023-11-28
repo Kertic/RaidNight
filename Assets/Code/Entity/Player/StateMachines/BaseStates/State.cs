@@ -1,7 +1,10 @@
-﻿namespace Code.Entity.Player.StateMachines
+﻿
+using Code.Entity.Player.StateMachines;
+namespace Code.Entity.Player.StateMachines.BaseStates
 {
     public abstract class State
     {
+        
         public abstract void OnStateEnter();
 
         public abstract void OnStateExit();

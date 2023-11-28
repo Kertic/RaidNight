@@ -1,22 +1,23 @@
-using Code.Entity.Player.StateMachines.PlayerControlStates.PlayerFaeArcherStates;
+using System;
+using Code.Entity.Player.StateMachines.FaeArcher.PlayerFaeArcherStates;
 using Code.Entity.Player.Views.FaeArcher;
 using Code.Entity.Player.Weapon;
 using UnityEngine;
 
-namespace Code.Entity.Player.StateMachines
+namespace Code.Entity.Player.StateMachines.FaeArcher
 {
-    [RequireComponent(typeof(PlayerData), typeof(EntityPhysics), typeof(SpiralWispView))]
+    [RequireComponent(typeof(PlayerData), typeof(EntityPhysics), typeof(FaeArcherView))]
     public class PlayerFaeArcherStateMachine : PlayerControlsStateMachine
     {
         [Header("Passive")]
-        [SerializeField]
-        private TrackingWeapon mischiefWeapon;
-
         [SerializeField]
         private float mischiefProjectileSpeed;
 
         [SerializeField]
         private int maxWispCount;
+
+        [SerializeField]
+        private MischiefStateMachine mischiefStateMachine;
 
         [Header("Enchanted Arrow")]
         [SerializeField]
@@ -50,29 +51,15 @@ namespace Code.Entity.Player.StateMachines
         private FireEnchantedArrow _FireEnchantedArrow { get; set; }
         private FaeAssault _FaeAssault { get; set; }
         private CommuneWithFae _CommuneWithFae { get; set; }
-        public SpiralWispView _SpiralWispView { get; private set; }
-
+        public FaeArcherView _SpiralWispView { get; private set; }
+        public Action<Entity> m_onHitEntity;
 
         private int _currentWispCount;
 
         private void EnchantedArrowOnEntityHit(Entity hitEntity)
         {
             hitEntity.TakeDamage(enchantedArrowDamageMultiplier * _PlayerData._BaseAttackDamage);
-            SetAutoAttackTarget(hitEntity);
-            FireMischief(hitEntity);
-        }
-
-        private void FireMischief(Entity targetEntity)
-        {
-            TrackingProjectile projectile = mischiefWeapon.FireProjectile(targetEntity.transform, mischiefProjectileSpeed);
-            _SpiralWispView.LaunchWispsToTarget(projectile);
-            projectile.m_onHit += hit2Ds =>
-            {
-                while (_currentWispCount > 0)
-                {
-                    RemoveWispCharge();
-                }
-            };
+            m_onHitEntity?.Invoke(hitEntity);
         }
 
         private void OnValidate()
@@ -87,11 +74,22 @@ namespace Code.Entity.Player.StateMachines
         protected override void Awake()
         {
             base.Awake();
-            _SpiralWispView = GetComponent<SpiralWispView>();
+            _SpiralWispView = GetComponent<FaeArcherView>();
             _Dash = _Flit = new Flit(_PlayerData, _EntityPhysics, this, flitMaxDistance, flitDuration, flitCooldown);
             _PrimaryAttack = _FireEnchantedArrow = new FireEnchantedArrow(_PlayerData, _EntityPhysics, this, castBarView, enchantedArrowCooldown);
             _SecondaryAttack = _FaeAssault = new FaeAssault(_PlayerData, _EntityPhysics, this, faeAssaultMaxDistance, faeAssaultDuration, faeAssaultCooldown);
             _Ultimate = _CommuneWithFae = new CommuneWithFae(_PlayerData, _EntityPhysics, this, communeCooldown, communeAbilityReductionTime);
+            mischiefStateMachine.m_onFiredTrackingProjectile += projectile =>
+            {
+                _SpiralWispView.AttachWispsToProjectile(projectile);
+                projectile.m_onEntityHit += hit2Ds =>
+                {
+                    while (_currentWispCount > 0)
+                    {
+                        RemoveWispCharge();
+                    }
+                };
+            };
         }
 
         protected override void Update()
@@ -138,15 +136,12 @@ namespace Code.Entity.Player.StateMachines
         public void FireEnchantedArrowWeapon(Vector2 targetLocation)
         {
             Projectile enchantedArrow = enchantedArrowFireAndForgetWeapon.FireProjectile(targetLocation - (Vector2)transform.position, enchantedArrowProjectileSpeed);
-            enchantedArrow.m_onHit += hit2Ds =>
+            enchantedArrow.m_onEntityHit += hit2Ds =>
             {
                 foreach (RaycastHit2D hit in hit2Ds)
                 {
                     Entity entity = hit.collider.gameObject.GetComponent<Entity>();
-                    if (entity != null)
-                    {
-                        EnchantedArrowOnEntityHit(entity);
-                    }
+                    EnchantedArrowOnEntityHit(entity);
                 }
             };
         }
@@ -158,7 +153,12 @@ namespace Code.Entity.Player.StateMachines
                 return;
             }
 
-            _SpiralWispView.AddWisp();
+            if (!mischiefStateMachine.GetCanAddWisps())
+            {
+                return;
+            }
+
+            _SpiralWispView.AddWispToSwirlingWisps();
             _currentWispCount++;
         }
 
@@ -166,7 +166,7 @@ namespace Code.Entity.Player.StateMachines
         {
             if (_currentWispCount == 0)
                 return false;
-            _SpiralWispView.RemoveWisp();
+            _SpiralWispView.RemoveWispFromSwirlingWisps();
             _currentWispCount--;
             return true;
         }

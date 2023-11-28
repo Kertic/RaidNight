@@ -1,5 +1,5 @@
 using Code.Entity.Player.StateMachines;
-using Code.Entity.Player.StateMachines.PlayerControlStates;
+using Code.Entity.Player.StateMachines.BaseStates;
 
 namespace Code.Entity.Player.Weapon.PlayerWeaponStates
 {

@@ -3942,6 +3942,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1743158770, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
+      propertyPath: mischiefReturnSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1743158770, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
+      propertyPath: faeArcherStateMachine
+      value: 
+      objectReference: {fileID: 3295558874927957165}
     - target: {fileID: 1839857876071113414, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
       propertyPath: m_Name
       value: Fae Player
@@ -4030,10 +4038,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2154462341089227762, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
-      propertyPath: wispAttackingModifier
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 5405098573614200258, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
       propertyPath: cam
       value: 
@@ -4049,3 +4053,14 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1839857876071113425, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
   m_PrefabInstance: {fileID: 3295558874927957162}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &3295558874927957165 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5405098573614200258, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
+  m_PrefabInstance: {fileID: 3295558874927957162}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 730605cb47e245dd8ea96fc0550dffc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

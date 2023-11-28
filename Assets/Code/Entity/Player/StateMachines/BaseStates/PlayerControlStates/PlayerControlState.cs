@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Code.Entity.Player.StateMachines.PlayerControlStates
+namespace Code.Entity.Player.StateMachines.BaseStates.PlayerControlStates
 {
     public abstract class PlayerControlState : State
     {

@@ -1,6 +1,6 @@
-using Code.Entity.Player.StateMachines.PlayerControlStates.SuperStates;
+using Code.Entity.Player.StateMachines.BaseStates.PlayerControlStates.SuperStates;
 
-namespace Code.Entity.Player.StateMachines.PlayerControlStates.PlayerFaeArcherStates
+namespace Code.Entity.Player.StateMachines.FaeArcher.PlayerFaeArcherStates
 {
     public class ExecuteFaeSkill : ExecuteSkill
     {

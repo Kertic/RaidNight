@@ -7,6 +7,7 @@ namespace Code.Entity.Player.Weapon
     {
         private Transform _trackedTarget;
         private float _firedSpeed;
+        private Vector3 _startingPosition;
         
         private void Update()
         {
@@ -21,12 +22,23 @@ namespace Code.Entity.Player.Weapon
         public override void FireProjectile(Vector2 newTravelDirection, float newSpeed)
         {
             base.FireProjectile(newTravelDirection, newSpeed);
+            _startingPosition = transform.position;
             _firedSpeed = newSpeed;
         }
 
         public void SetTarget(Transform newTarget)
         {
             _trackedTarget = newTarget;
+        }
+
+        public float GetDistanceToTarget()
+        {
+            return Vector3.Distance(transform.position, _trackedTarget.position);
+        }
+
+        public Vector3 GetStartingPosition()
+        {
+            return _startingPosition;
         }
     }
 }

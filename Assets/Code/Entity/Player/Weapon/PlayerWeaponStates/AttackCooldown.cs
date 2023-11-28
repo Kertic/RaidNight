@@ -1,4 +1,4 @@
-﻿using Code.Entity.Player.StateMachines.PlayerControlStates;
+﻿using Code.Entity.Player.StateMachines;
 using UnityEngine;
 
 namespace Code.Entity.Player.Weapon.PlayerWeaponStates

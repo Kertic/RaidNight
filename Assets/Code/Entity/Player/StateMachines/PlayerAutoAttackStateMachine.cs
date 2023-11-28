@@ -4,7 +4,7 @@ using Code.Entity.Player.Weapon;
 using Code.Entity.Player.Weapon.PlayerWeaponStates;
 using UnityEngine;
 
-namespace Code.Entity.Player.StateMachines.PlayerControlStates
+namespace Code.Entity.Player.StateMachines
 {
     public class PlayerAutoAttackStateMachine : MonoBehaviour
     {
@@ -93,15 +93,12 @@ namespace Code.Entity.Player.StateMachines.PlayerControlStates
         public virtual void FireAutoAttack()
         {
             TrackingProjectile projectile = weapon.FireProjectile(playerControlsStateMachine._AutoAttackTarget.transform, projectileSpeed);
-            projectile.m_onHit += hit2Ds =>
+            projectile.m_onEntityHit += hit2Ds =>
             {
                 foreach (RaycastHit2D hit in hit2Ds)
                 {
                     Entity entity = hit.collider.gameObject.GetComponent<Entity>();
-                    if (entity != null)
-                    {
-                        entity.TakeDamage(playerData._BaseAttackDamage);
-                    }
+                    entity.TakeDamage(playerData._BaseAttackDamage);
                 }
             };
 

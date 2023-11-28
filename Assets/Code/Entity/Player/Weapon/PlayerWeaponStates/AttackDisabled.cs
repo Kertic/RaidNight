@@ -1,4 +1,4 @@
-﻿using Code.Entity.Player.StateMachines.PlayerControlStates;
+﻿using Code.Entity.Player.StateMachines;
 
 namespace Code.Entity.Player.Weapon.PlayerWeaponStates
 {

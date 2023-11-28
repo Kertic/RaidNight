@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Code.Entity.Player.Weapon
@@ -7,7 +8,8 @@ namespace Code.Entity.Player.Weapon
     [RequireComponent(typeof(EntityPhysics))]
     public class Projectile : MonoBehaviour
     {
-        public Action<RaycastHit2D[]> m_onHit;
+        public Action<RaycastHit2D[]> m_onEntityHit;
+        public Action<RaycastHit2D[]> m_onWallHit;
         public Action<RaycastHit2D[]> m_onTrigger;
 
         protected EntityPhysics m_entityPhysics;
@@ -28,7 +30,19 @@ namespace Code.Entity.Player.Weapon
 
         private void OnRaycastCollisionsDetected(List<RaycastHit2D> collisions)
         {
-            m_onHit?.Invoke(collisions.ToArray());
+            RaycastHit2D[] entityHits = collisions.Where(col => col.transform.gameObject.CompareTag("NonPlayerEntity")).ToArray();
+            RaycastHit2D[] wallHits = collisions.Where(col => col.transform.gameObject.CompareTag("Wall")).ToArray();
+
+
+            if (entityHits.Length > 0)
+            {
+                m_onEntityHit?.Invoke(entityHits);
+            }
+
+            if (wallHits.Length > 0)
+            {
+                m_onWallHit?.Invoke(wallHits);
+            }
         }
 
         private void OnRaycastTriggersDetected(Dictionary<string, RaycastHit2D> collisions)

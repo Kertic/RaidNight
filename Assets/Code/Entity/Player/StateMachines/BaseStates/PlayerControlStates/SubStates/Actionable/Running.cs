@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace Code.Entity.Player.StateMachines.PlayerControlStates.SubStates.Actionable
+namespace Code.Entity.Player.StateMachines.BaseStates.PlayerControlStates.SubStates.Actionable
 {
-    public class Running : StateMachines.PlayerControlStates.SuperStates.Actionable
+    public class Running : SuperStates.Actionable
     {
         private PlayerControlsStateMachine.AttackHaltHandle _haltHandle;
 

@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace Code.Entity.Player.StateMachines.PlayerControlStates.SubStates.Actionable
+namespace Code.Entity.Player.StateMachines.BaseStates.PlayerControlStates.SubStates.Actionable
 {
-    public class Idle : StateMachines.PlayerControlStates.SuperStates.Actionable
+    public class Idle : SuperStates.Actionable
     {
 
         public override void OnReceiveMovementInput(Vector2 direction)

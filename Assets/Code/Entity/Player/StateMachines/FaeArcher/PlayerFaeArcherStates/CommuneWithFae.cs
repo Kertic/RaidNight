@@ -1,4 +1,4 @@
-namespace Code.Entity.Player.StateMachines.PlayerControlStates.PlayerFaeArcherStates
+namespace Code.Entity.Player.StateMachines.FaeArcher.PlayerFaeArcherStates
 {
     public class CommuneWithFae : ExecuteFaeSkill
     {

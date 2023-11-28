@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Code.Entity.Player.StateMachines.PlayerControlStates.SubStates.ExecuteSkill
+namespace Code.Entity.Player.StateMachines.BaseStates.PlayerControlStates.SubStates.ExecuteSkill
 {
     public class Dash : SuperStates.ExecuteSkill
     {

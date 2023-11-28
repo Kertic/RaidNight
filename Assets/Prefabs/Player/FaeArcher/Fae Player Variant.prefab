@@ -1,5 +1,74 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1743158768
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1743158769}
+  - component: {fileID: 1743158771}
+  - component: {fileID: 1743158770}
+  m_Layer: 0
+  m_Name: MischiefStateMachine
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1743158769
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1743158768}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1839857876071113425}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1743158771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1743158768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7128a12f0612dd4ab3be66004c68ccb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mischiefTemplate: {fileID: 161805944922596987, guid: 3901eb263919b6b45a1a698072445537, type: 3}
+--- !u!114 &1743158770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1743158768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3134a06b1f005d34cb35b808c5d92497, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mischiefWeapon: {fileID: 3859586872657458101}
+  mischiefView: {fileID: 1743158771}
+  faeArcherTransform: {fileID: 1839857876071113425}
+  mischiefSpinSpeed: 0.9
+  mischiefSpinRadius: 1
+  mischiefProjectileSpeed: 2
 --- !u!1 &2046571625
 GameObject:
   m_ObjectHideFlags: 0
@@ -100,6 +169,59 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 6924403992519335721, guid: f542ae8fe3139de418c5f43968c793aa, type: 3}
+--- !u!1 &8724785549044951613
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8631366759018517282}
+  - component: {fileID: 4715523648117617943}
+  m_Layer: 0
+  m_Name: SpiralWispsView
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &8631366759018517282
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8724785549044951613}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1839857876071113425}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &4715523648117617943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8724785549044951613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 543ada8551abf4342b9c188430008c13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  circleCenterTransform: {fileID: 1839857876071113425}
+  wispTemplate: {fileID: 2273119222524783909, guid: 7e64cd21db7a0554cb47db29569398da, type: 3}
+  wispRadius: 0.7
+  wispSpinSpeed: 1.5
 --- !u!1001 &6920686292133261301
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -307,7 +429,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8755925106836426035, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
   m_PrefabInstance: {fileID: 6920686292133261301}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2154462341089227762
+--- !u!114 &261123640322870107
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -316,17 +438,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1839857876071113414}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 543ada8551abf4342b9c188430008c13, type: 3}
+  m_Script: {fileID: 11500000, guid: 2d3723e41a3bfde47bf9ad67ca717391, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  circleCenterTransform: {fileID: 1839857876071113425}
-  wispTemplate: {fileID: 2273119222524783909, guid: 7e64cd21db7a0554cb47db29569398da, type: 3}
-  mischiefTemplate: {fileID: 161805944922596987, guid: 3901eb263919b6b45a1a698072445537, type: 3}
-  mischiefRadius: 0.7
-  mischiefSpinSpeed: 1
-  wispRadius: 0.2
-  wispSpinSpeedMultiplier: -1.5
-  wispAttackingModifier: 1.5
+  playerSwirlingWisps: {fileID: 4715523648117617943}
 --- !u!114 &5405098573614200258
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -343,9 +458,9 @@ MonoBehaviour:
   targetIndicatorView: {fileID: 849795244230428908}
   castBarView: {fileID: 4858175139143665954}
   skillBarUIView: {fileID: 0}
-  mischiefWeapon: {fileID: 3859586872657458101}
   mischiefProjectileSpeed: 2
   maxWispCount: 3
+  mischiefStateMachine: {fileID: 1743158770}
   enchantedArrowFireAndForgetWeapon: {fileID: 2079363060}
   enchantedArrowProjectileSpeed: 12
   fireEnchantedArrowCastTime: 0.5

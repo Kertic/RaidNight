@@ -1,50 +1,37 @@
-﻿using Code.Camera;
+﻿using System.Collections.Generic;
+using Code.Entity.Buffs;
+using Code.Entity.Buffs.PlayerBuffs;
+using Code.Entity.Buffs.PlayerBuffs.FaeArcherBuffs;
+using Code.Systems.Views;
 using UnityEngine;
 
 namespace Code.Entity.Player.StateMachines.FaeArcher.PlayerFaeArcherStates
 {
     public class FaeAssault : ExecuteFaeSkill
     {
-        private float _maxDashDistance;
-        private float _dashDuration;
-        private float _testStartTime;
-        private PlayerControlsStateMachine.AttackHaltHandle _haltHandle;
+        private float _buffDuration, _attSpeedAmp;
+        private Buff _faeAssaultBuff;
+        private Sprite _buffIcon;
 
-        public FaeAssault(PlayerData data, EntityPhysics entityPhysics, PlayerFaeArcherStateMachine controlsStateMachine, float maxDashDistance, float dashDuration, float cooldown) : base(data, entityPhysics, controlsStateMachine, cooldown)
+        public FaeAssault(PlayerData data, EntityPhysics entityPhysics, PlayerFaeArcherStateMachine controlsStateMachine, float buffDuration, float cooldown, float attackSpeedAmp, Sprite buffIcon) : base(data, entityPhysics, controlsStateMachine, cooldown)
         {
-            _maxDashDistance = maxDashDistance;
-            _dashDuration = dashDuration;
+            _buffDuration = buffDuration;
+            _attSpeedAmp = attackSpeedAmp;
+            _buffIcon = buffIcon;
         }
 
         public override void OnStateEnter()
         {
             base.OnStateEnter();
-            _testStartTime = Time.time;
-            Debug.Log("Start: " + _testStartTime);
-
-            _haltHandle = m_controlsStateMachine.HaltAutoAttacks();
-            EntityPhysics.BurstForce force = new(
-                m_controlsStateMachine._MovementDirection == Vector2.zero ? (PlayerCam.mousePosition - (Vector2)m_entityPhysics.transform.position) : m_controlsStateMachine._MovementDirection,
-                _dashDuration); // This is bugged where the total burst is: seconds =  max distance * duration instead of seconds = duration
-            force.m_movementVector = force.m_movementVector.normalized * _maxDashDistance;
-            m_entityPhysics.AddBurstForce(force, () => { m_controlsStateMachine.ChangeToIdleState(); });
+            _faeAssaultBuff = new FaeAssaultBuff(m_controlsStateMachine._PlayerEntity, _buffDuration, _buffIcon, _attSpeedAmp);
+            m_controlsStateMachine._PlayerEntity.AddBuff(_faeAssaultBuff);
+            m_controlsStateMachine.ChangeToIdleState();
         }
 
-        public override void OnStateExit()
+        public void SetBuffDuration(float newDuration)
         {
-            base.OnStateExit();
-            m_controlsStateMachine.ReleaseAutoAttackHaltHandle(_haltHandle);
-            m_controlsStateMachine.AddWispCharge();
+            _buffDuration = newDuration;
         }
-
-        public void SetDashDistance(float newDashDistance)
-        {
-            _maxDashDistance = newDashDistance;
-        }
-
-        public void SetDashDuration(float newDashDuration)
-        {
-            _dashDuration = newDashDuration;
-        }
+      
     }
 }

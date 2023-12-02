@@ -41,11 +41,12 @@ namespace Code.Entity
             _remainingCycleTime = cyclingTime;
         }
 
-        void FixedUpdate()
+        protected override void FixedUpdate()
         {
+            base.FixedUpdate();
             _remainingCycleTime -= Time.fixedDeltaTime;
 
-            if (_remainingCycleTime <= 0) 
+            if (_remainingCycleTime <= 0)
             {
                 IncrementCycleIndex();
             }
@@ -83,8 +84,9 @@ namespace Code.Entity
             for (int i = 0; i < cycleLocations.Length; i++)
             {
                 int test = (i + 1) % cycleLocations.Length;
-                Gizmos.DrawLine( cycleLocations[i], cycleLocations[(i + 1) % cycleLocations.Length]);
+                Gizmos.DrawLine(cycleLocations[i], cycleLocations[(i + 1) % cycleLocations.Length]);
             }
+
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(_cycleStart, 0.05f);
             Gizmos.color = Color.green;

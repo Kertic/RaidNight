@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Code.Camera;
+using Code.Entity.Buffs;
 using Code.Entity.Player.StateMachines.BaseStates.PlayerControlStates;
 using Code.Entity.Player.StateMachines.BaseStates.PlayerControlStates.SubStates.Actionable;
 using Code.Entity.Player.StateMachines.BaseStates.PlayerControlStates.SuperStates;
@@ -57,6 +58,7 @@ namespace Code.Entity.Player.StateMachines
         public PlayerData _PlayerData { get; private set; }
         public Vector2 _MovementDirection { get; private set; }
         public EntityPhysics _EntityPhysics { get; private set; }
+        public PlayerEntity _PlayerEntity { get; private set; }
         public bool _IsAutoAttackEnabled { get; protected set; }
         protected Idle _Idle { get; set; }
         protected Running _Running { get; set; }
@@ -65,6 +67,8 @@ namespace Code.Entity.Player.StateMachines
         protected ExecuteSkill _Dash { get; set; }
         protected ExecuteSkill _Ultimate { get; set; }
 
+        public SkillBarUIView _SkillBarUIView => skillBarUIView;
+
         public Action m_haltAutoAttack;
         public Action m_resetAutoAttack;
         public Action m_resumeAutoAttack;
@@ -72,15 +76,15 @@ namespace Code.Entity.Player.StateMachines
 
         public static bool DidEffectProc(float procChance, float luckStat)
         {
-            return Random.Range(0.0f, 1.0f) <=  1.0f - Mathf.Pow((1.0f - procChance), luckStat + 1.0f);
+            return Random.Range(0.0f, 1.0f) <= 1.0f - Mathf.Pow((1.0f - procChance), luckStat + 1.0f);
         }
 
         protected virtual void Awake()
         {
-
             _PlayerData = GetComponent<PlayerData>();
             _IsAutoAttackEnabled = true;
             _EntityPhysics = GetComponent<EntityPhysics>();
+            _PlayerEntity = GetComponent<PlayerEntity>();
             _handles = new List<AttackHaltHandle>();
             castBarView.ChangeViewState(PlayerCastView.ViewState.HIDDEN);
             m_currentState = _Idle = new Idle(_PlayerData, _EntityPhysics, this);
@@ -137,7 +141,6 @@ namespace Code.Entity.Player.StateMachines
                     m_currentState.OnHoldButtonInput(action.Value);
             }
         }
-
 
         private void OnCollisionEnter2D(Collision2D other)
         {
@@ -231,5 +234,9 @@ namespace Code.Entity.Player.StateMachines
                 m_haltAutoAttack?.Invoke();
             }
         }
+
+
+
+
     }
 }

@@ -17,7 +17,6 @@ namespace Code.Entity.Player.Weapon
                 OnDestroyProjectile, true, 10, 500);
         }
 
-        private void Start() { }
 
         #region Projectile Pool Functions
 

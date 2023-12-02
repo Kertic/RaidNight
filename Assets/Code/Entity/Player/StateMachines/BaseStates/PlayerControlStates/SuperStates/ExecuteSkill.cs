@@ -8,6 +8,12 @@ namespace Code.Entity.Player.StateMachines.BaseStates.PlayerControlStates.SuperS
         protected float m_maxCooldown;
         protected float m_timeWhenAvailable;
 
+        public ExecuteSkill(PlayerData data, EntityPhysics entityPhysics, PlayerControlsStateMachine controlsStateMachine, float cooldown) : base(data, entityPhysics, controlsStateMachine)
+        {
+            m_maxCooldown = cooldown;
+            m_timeWhenAvailable = 0;
+        }
+
         public override void OnStateEnter() { }
 
         public override void OnStateExit()
@@ -46,10 +52,9 @@ namespace Code.Entity.Player.StateMachines.BaseStates.PlayerControlStates.SuperS
             m_timeWhenAvailable = MathF.Min(m_timeWhenAvailable - reductionTime, Time.time);
         }
 
-        public ExecuteSkill(PlayerData data, EntityPhysics entityPhysics, PlayerControlsStateMachine controlsStateMachine, float cooldown) : base(data, entityPhysics, controlsStateMachine)
+        public void SetMaxCooldown(float newMaxCooldown)
         {
-            m_maxCooldown = cooldown;
-            m_timeWhenAvailable = 0;
+            m_maxCooldown = newMaxCooldown;
         }
     }
 }

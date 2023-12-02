@@ -1,7 +1,12 @@
 using System;
+using System.Collections.Generic;
+using Code.Entity.Buffs;
+using Code.Entity.Buffs.PlayerBuffs.FaeArcherBuffs;
+using Code.Entity.Player.StateMachines.BaseStates.PlayerControlStates;
 using Code.Entity.Player.StateMachines.FaeArcher.PlayerFaeArcherStates;
 using Code.Entity.Player.Views.FaeArcher;
 using Code.Entity.Player.Weapon;
+using Code.Systems.Views;
 using UnityEngine;
 
 namespace Code.Entity.Player.StateMachines.FaeArcher
@@ -14,7 +19,13 @@ namespace Code.Entity.Player.StateMachines.FaeArcher
         private float mischiefProjectileSpeed;
 
         [SerializeField]
-        private int maxWispCount;
+        private float mischiefDotTotalDamage, mischiefDotDuration;
+
+        [SerializeField]
+        private Sprite mischiefDotDebuffIcon;
+
+        [SerializeField]
+        private int maxWispCount, mischiefTotalDamageTicks;
 
         [SerializeField]
         private MischiefStateMachine mischiefStateMachine;
@@ -28,10 +39,13 @@ namespace Code.Entity.Player.StateMachines.FaeArcher
 
         [Header("Fae Assault")]
         [SerializeField]
-        private float faeAssaultMaxDistance;
+        private float faeAssaultDuration;
 
         [SerializeField]
-        private float faeAssaultDuration, faeAssaultCooldown;
+        private Sprite faeAssaultBuffIcon;
+
+        [SerializeField]
+        private float faeAssaultCooldown, faeAssaultAttackSpeedAmp;
 
         [Header("Flit")]
         [SerializeField]
@@ -47,6 +61,7 @@ namespace Code.Entity.Player.StateMachines.FaeArcher
         [SerializeField]
         private float communeAbilityReductionTime;
 
+
         private Flit _Flit { get; set; }
         private FireEnchantedArrow _FireEnchantedArrow { get; set; }
         private FaeAssault _FaeAssault { get; set; }
@@ -56,17 +71,25 @@ namespace Code.Entity.Player.StateMachines.FaeArcher
 
         private int _currentWispCount;
 
+        private BuffView _faeAssaultBuffView;
+
         private void EnchantedArrowOnEntityHit(Entity hitEntity)
         {
             hitEntity.TakeDamage(enchantedArrowDamageMultiplier * _PlayerData._BaseAttackDamage);
             m_onHitEntity?.Invoke(hitEntity);
         }
 
+        private void MischiefOnHit(Entity hitEntity)
+        {
+            MischiefDamageDebuff dotDebuff = new MischiefDamageDebuff(hitEntity, mischiefDotDuration, mischiefDotDebuffIcon, mischiefDotTotalDamage, mischiefTotalDamageTicks);
+            hitEntity.AddBuff(dotDebuff);
+        }
+
         private void OnValidate()
         {
-            if (skillBarUIView != null && skillBarUIView.GetSkillCount() != 4)
+            if (_SkillBarUIView != null && _SkillBarUIView.GetSkillCount() != 4)
             {
-                Debug.LogError("ERROR: " + gameObject.name + " has been assigned a skill bar with " + skillBarUIView.GetSkillCount() + ". " + "It must have 4 skills.");
+                Debug.LogError("ERROR: " + gameObject.name + " has been assigned a skill bar with " + _SkillBarUIView.GetSkillCount() + ". " + "It must have 4 skills.");
                 skillBarUIView = null;
             }
         }
@@ -77,13 +100,23 @@ namespace Code.Entity.Player.StateMachines.FaeArcher
             _SpiralWispView = GetComponent<FaeArcherView>();
             _Dash = _Flit = new Flit(_PlayerData, _EntityPhysics, this, flitMaxDistance, flitDuration, flitCooldown);
             _PrimaryAttack = _FireEnchantedArrow = new FireEnchantedArrow(_PlayerData, _EntityPhysics, this, castBarView, enchantedArrowCooldown);
-            _SecondaryAttack = _FaeAssault = new FaeAssault(_PlayerData, _EntityPhysics, this, faeAssaultMaxDistance, faeAssaultDuration, faeAssaultCooldown);
+            _SecondaryAttack = _FaeAssault = new FaeAssault(_PlayerData, _EntityPhysics, this, faeAssaultDuration, faeAssaultCooldown, faeAssaultAttackSpeedAmp, faeAssaultBuffIcon);
             _Ultimate = _CommuneWithFae = new CommuneWithFae(_PlayerData, _EntityPhysics, this, communeCooldown, communeAbilityReductionTime);
             mischiefStateMachine.m_onFiredTrackingProjectile += projectile =>
             {
                 _SpiralWispView.AttachWispsToProjectile(projectile);
                 projectile.m_onEntityHit += hit2Ds =>
                 {
+                    foreach (RaycastHit2D hit in hit2Ds)
+                    {
+                        Entity entity = hit.collider.gameObject.GetComponent<Entity>();
+                        if (entity != null)
+                        {
+                            MischiefOnHit(entity);
+                            break;
+                        }
+                    }
+
                     while (_currentWispCount > 0)
                     {
                         RemoveWispCharge();
@@ -95,10 +128,10 @@ namespace Code.Entity.Player.StateMachines.FaeArcher
         protected override void Update()
         {
             base.Update();
-            skillBarUIView.GetIconUIView(0).SetProgress(_FireEnchantedArrow.GetPercentCooldownCompleted(), _FireEnchantedArrow.GetTimeRemainingUntilReady());
-            skillBarUIView.GetIconUIView(1).SetProgress(_FaeAssault.GetPercentCooldownCompleted(), _FaeAssault.GetTimeRemainingUntilReady());
-            skillBarUIView.GetIconUIView(2).SetProgress(_Flit.GetPercentCooldownCompleted(), _Flit.GetTimeRemainingUntilReady());
-            skillBarUIView.GetIconUIView(3).SetProgress(_CommuneWithFae.GetPercentCooldownCompleted(), _CommuneWithFae.GetTimeRemainingUntilReady());
+            _SkillBarUIView.GetIconUIView(0).SetProgress(_FireEnchantedArrow.GetPercentCooldownCompleted(), _FireEnchantedArrow.GetTimeRemainingUntilReady());
+            _SkillBarUIView.GetIconUIView(1).SetProgress(_FaeAssault.GetPercentCooldownCompleted(), _FaeAssault.GetTimeRemainingUntilReady());
+            _SkillBarUIView.GetIconUIView(2).SetProgress(_Flit.GetPercentCooldownCompleted(), _Flit.GetTimeRemainingUntilReady());
+            _SkillBarUIView.GetIconUIView(3).SetProgress(_CommuneWithFae.GetPercentCooldownCompleted(), _CommuneWithFae.GetTimeRemainingUntilReady());
         }
 
         protected override void Start()
@@ -109,7 +142,8 @@ namespace Code.Entity.Player.StateMachines.FaeArcher
 
         public override void ChangeToPrimaryAttack()
         {
-            _FireEnchantedArrow.SetCastTime(fireEnchantedArrowCastTime);
+            _FireEnchantedArrow.SetCastTime(fireEnchantedArrowCastTime * (1.0f / _PlayerData._AttackSpeed));
+            _FireEnchantedArrow.SetMaxCooldown(enchantedArrowCooldown * (1.0f / _PlayerData._AttackSpeed));
             base.ChangeToPrimaryAttack();
         }
 
@@ -122,9 +156,13 @@ namespace Code.Entity.Player.StateMachines.FaeArcher
 
         public override void ChangeToSecondaryAttack()
         {
-            _FaeAssault.SetDashDuration(faeAssaultDuration);
-            _FaeAssault.SetDashDistance(faeAssaultMaxDistance);
+            _FaeAssault.SetBuffDuration(faeAssaultDuration);
             base.ChangeToSecondaryAttack();
+        }
+
+        protected override void ChangeState(PlayerControlState newControlState)
+        {
+            base.ChangeState(newControlState);
         }
 
         public override void ChangeToUltimate()
@@ -177,5 +215,6 @@ namespace Code.Entity.Player.StateMachines.FaeArcher
             _FaeAssault.ReduceCooldown(reductionTime);
             _FireEnchantedArrow.ReduceCooldown(reductionTime);
         }
+
     }
 }

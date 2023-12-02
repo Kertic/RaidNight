@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using Code.Entity.Buffs;
+using Code.Entity.Player.Weapon;
 using UnityEngine;
+using UnityEngine.Pool;
 
 namespace Code.Systems.Views
 {
@@ -9,14 +12,9 @@ namespace Code.Systems.Views
         [SerializeField]
         private List<SkillIconUIView> skillImages;
 
+      
 
-        // Start is called before the first frame update
-        void Start() { }
-
-        // Update is called once per frame
-        void Update() { }
-
-        public void SetImages(Sprite[] sprites)
+        public void SetSkillImages(Sprite[] sprites)
         {
             for (int i = 0; i < skillImages.Count && i < sprites.Length; i++)
             {

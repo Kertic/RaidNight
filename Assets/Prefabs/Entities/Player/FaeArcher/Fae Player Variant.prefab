@@ -65,9 +65,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mischiefWeapon: {fileID: 3859586872657458101}
   mischiefView: {fileID: 1743158771}
-  faeArcherTransform: {fileID: 1839857876071113425}
+  faeArcherStateMachine: {fileID: 5405098573614200258}
   mischiefSpinSpeed: 0.9
   mischiefSpinRadius: 1
+  returnDuration: 0
   mischiefProjectileSpeed: 2
 --- !u!1 &2046571625
 GameObject:
@@ -466,9 +467,10 @@ MonoBehaviour:
   fireEnchantedArrowCastTime: 0.5
   enchantedArrowDamageMultiplier: 1
   enchantedArrowCooldown: 3
-  faeAssaultMaxDistance: 1
   faeAssaultDuration: 1
+  faeAssaultBuffIcon: {fileID: 21300000, guid: a1393cf51557477499a25a6577ede431, type: 3}
   faeAssaultCooldown: 3
+  faeAssaultAttackSpeedAmp: 1
   flitMaxDistance: 1
   flitDuration: 0.07
   flitCooldown: 2

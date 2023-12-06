@@ -212,7 +212,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 320
-  buffUIView: {fileID: 6596413824018762885}
+  buffViewGrids:
+  - {fileID: 6596413824018762885}
   dummyEntityView: {fileID: 7175471328799457664}
   cyclingTime: 1
   cycleLocations:
@@ -301,7 +302,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!1 &7175471329075539514
 GameObject:
   m_ObjectHideFlags: 0

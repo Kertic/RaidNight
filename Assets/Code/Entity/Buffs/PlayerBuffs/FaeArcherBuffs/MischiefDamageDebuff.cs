@@ -17,15 +17,15 @@ namespace Code.Entity.Buffs.PlayerBuffs.FaeArcherBuffs
             _totalTicks = totalDamageTicks;
         }
 
-        public override void OnBuffEnter(BuffView buffview)
+        public override void OnBuffEnter(BuffView[] buffViews)
         {
-            base.OnBuffEnter(buffview);
+            base.OnBuffEnter(buffViews);
             _elapsedTicks = 0;
         }
 
-        public override void OnBuffUpdate(BuffView buffview)
+        public override void OnBuffUpdate(BuffView[] buffViews)
         {
-            base.OnBuffUpdate(buffview);
+            base.OnBuffUpdate(buffViews);
             float percentComplete = GetTimeRemaining() / m_duration;
             float expectedTicks = (1.0f - percentComplete) * _totalTicks;
             

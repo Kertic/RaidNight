@@ -68,7 +68,7 @@ MonoBehaviour:
   faeArcherStateMachine: {fileID: 5405098573614200258}
   mischiefSpinSpeed: 0.9
   mischiefSpinRadius: 1
-  returnDuration: 0
+  returnDuration: 2
   mischiefProjectileSpeed: 2
 --- !u!1 &2046571625
 GameObject:
@@ -282,6 +282,10 @@ PrefabInstance:
       propertyPath: projectilePrefab
       value: 
       objectReference: {fileID: 6431110804601790196, guid: 93fd65079639ea04b86d784fbff7fb48, type: 3}
+    - target: {fileID: 7302240593839029537, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
+      propertyPath: buffViewGrids.Array.size
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8755925105153396923, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -460,16 +464,20 @@ MonoBehaviour:
   castBarView: {fileID: 4858175139143665954}
   skillBarUIView: {fileID: 0}
   mischiefProjectileSpeed: 2
+  mischiefDotTotalDamage: 25
+  mischiefDotDuration: 5
+  mischiefDotDebuffIcon: {fileID: 21300000, guid: 54e07f768709733408df49059b8ac813, type: 3}
   maxWispCount: 3
+  mischiefTotalDamageTicks: 100
   mischiefStateMachine: {fileID: 1743158770}
   enchantedArrowFireAndForgetWeapon: {fileID: 2079363060}
   enchantedArrowProjectileSpeed: 12
   fireEnchantedArrowCastTime: 0.5
   enchantedArrowDamageMultiplier: 1
   enchantedArrowCooldown: 3
-  faeAssaultDuration: 1
+  faeAssaultDuration: 33
   faeAssaultBuffIcon: {fileID: 21300000, guid: a1393cf51557477499a25a6577ede431, type: 3}
-  faeAssaultCooldown: 3
+  faeAssaultCooldown: 0.05
   faeAssaultAttackSpeedAmp: 1
   flitMaxDistance: 1
   flitDuration: 0.07

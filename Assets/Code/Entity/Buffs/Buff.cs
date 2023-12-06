@@ -21,27 +21,38 @@ namespace Code.Entity.Buffs
             m_buffIcon = buffIcon;
         }
 
-        public virtual void OnBuffEnter(BuffView buffview)
+        public virtual void OnBuffEnter(BuffView[] buffViews)
         {
-            _timeStarted = Time.time;
-            buffview.SetImage(m_buffIcon);
-            buffview.SetIconText(m_duration.ToString("0.0"));
+            foreach (BuffView buffView in buffViews)
+            {
+                _timeStarted = Time.time;
+                buffView.SetImage(m_buffIcon);
+                buffView.SetIconText(m_duration.ToString("0.0"));
+            }
         }
 
-        public virtual void OnBuffExit(BuffView buffview)
+        public virtual void OnBuffExit(BuffView[] buffViews)
         {
-            buffview.SetImage(null);
-            buffview.SetIconText("");
-            m_onBuffExpire?.Invoke();
+            foreach (BuffView buffView in buffViews)
+            {
+                buffView.SetImage(null);
+                buffView.SetIconText("");
+                m_onBuffExpire?.Invoke();
+            }
         }
 
-        public virtual void OnBuffUpdate(BuffView buffview)
+        public virtual void OnBuffUpdate(BuffView[] buffViews)
         {
             float timeRemaining = GetTimeRemaining();
-            buffview.SetIconText(timeRemaining <= 30.0f ? GetTimeRemaining().ToString("0.0") : "");
+
+            foreach (BuffView buffView in buffViews)
+            {
+                buffView.SetIconText(timeRemaining <= 30.0f ? GetTimeRemaining().ToString("0.0") : "");
+            }
+
             if (GetTimeRemaining() <= 0.0f)
             {
-                OnBuffExit(buffview);
+                OnBuffExit(buffViews);
             }
         }
 

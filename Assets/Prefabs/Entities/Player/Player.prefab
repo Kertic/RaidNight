@@ -1833,7 +1833,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
-  buffUIView: {fileID: 71370194173659339}
+  buffViewGrids:
+  - {fileID: 71370194173659339}
   playerHealthView: {fileID: 5571864666869875468}
 --- !u!1 &8755925106863008460
 GameObject:

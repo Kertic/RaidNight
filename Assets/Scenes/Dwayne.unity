@@ -369,6 +369,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   floatingCombatTextTemplate: {fileID: 2668294953916072671, guid: c9cfbc2de579da2428b78dae2eed9ede, type: 3}
+--- !u!114 &571434742 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2272953169541011387, guid: 48452b7939a47f143b6589d9b7777031, type: 3}
+  m_PrefabInstance: {fileID: 577819516062899916}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59d3308db5b84be4196a0a681c54cdb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &741051021
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1020,6 +1031,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1743158770, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
+      propertyPath: returnDuration
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 386731922647339732, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
+      propertyPath: buffViewGrids.Array.data[1]
+      value: 
+      objectReference: {fileID: 571434742}
     - target: {fileID: 1839857876071113414, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
       propertyPath: m_Name
       value: Fae Player
@@ -1116,30 +1135,6 @@ PrefabInstance:
       propertyPath: skillBarUIView
       value: 
       objectReference: {fileID: 1087644062}
-    - target: {fileID: 5405098573614200258, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
-      propertyPath: faeAssaultCooldown
-      value: 0.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 5405098573614200258, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
-      propertyPath: faeAssaultDuration
-      value: 33
-      objectReference: {fileID: 0}
-    - target: {fileID: 5405098573614200258, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
-      propertyPath: mischiefDotDuration
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5405098573614200258, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
-      propertyPath: mischiefDotDebuffIcon
-      value: 
-      objectReference: {fileID: 21300000, guid: 54e07f768709733408df49059b8ac813, type: 3}
-    - target: {fileID: 5405098573614200258, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
-      propertyPath: mischiefDotTotalDamage
-      value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: 5405098573614200258, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
-      propertyPath: mischiefTotalDamageTicks
-      value: 100
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
 --- !u!224 &3295558874927957164 stripped

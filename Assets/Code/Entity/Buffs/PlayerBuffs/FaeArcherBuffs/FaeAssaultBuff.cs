@@ -13,9 +13,9 @@ namespace Code.Entity.Buffs.PlayerBuffs.FaeArcherBuffs
             _increaseAmount = increaseAmount;
         }
 
-        public override void OnBuffEnter(BuffView buffview)
+        public override void OnBuffEnter(BuffView[] buffViews)
         {
-            base.OnBuffEnter(buffview);
+            base.OnBuffEnter(buffViews);
             _modifier = new PlayerData.StatModifier(attSpeed =>
                 {
                     attSpeed += _increaseAmount;
@@ -27,9 +27,9 @@ namespace Code.Entity.Buffs.PlayerBuffs.FaeArcherBuffs
             m_playerEntity._PlayerData.AddModifier(_modifier, PlayerData.StatType.MOVESPEED);
         }
 
-        public override void OnBuffExit(BuffView buffview)
+        public override void OnBuffExit(BuffView[] buffViews)
         {
-            base.OnBuffExit(buffview);
+            base.OnBuffExit(buffViews);
             m_playerEntity._PlayerData.RemoveModifier(_modifier, PlayerData.StatType.ATTSPEED);
             m_playerEntity._PlayerData.RemoveModifier(_modifier, PlayerData.StatType.MOVESPEED);
         }

@@ -15,17 +15,17 @@ namespace Code.Entity
         protected int maxHealth;
 
         [SerializeField]
-        private BuffUIView buffUIView;
+        private List<BuffViewGrid> buffViewGrids;
 
         protected float m_currentHealth;
         protected IEntityView m_view;
 
-        private Dictionary<Buff, BuffView> _activeBuffs;
+        private Dictionary<Buff, List<BuffView>> _activeBuffs;
 
         protected virtual void Awake()
         {
             m_currentHealth = maxHealth;
-            _activeBuffs = new Dictionary<Buff, BuffView>();
+            _activeBuffs = new Dictionary<Buff, List<BuffView>>();
         }
 
         public virtual void TakeDamage(float damage)
@@ -46,20 +46,36 @@ namespace Code.Entity
         {
             foreach (Buff buff in _activeBuffs.Keys.ToList())
             {
-                buff.OnBuffUpdate(_activeBuffs[buff]);
+                buff.OnBuffUpdate(_activeBuffs[buff].ToArray());
             }
         }
 
         public void AddBuff(Buff newBuffToAdd)
         {
-            _activeBuffs[newBuffToAdd] = buffUIView.GetBuffView();
-            newBuffToAdd.OnBuffEnter(_activeBuffs[newBuffToAdd]);
+            if (!_activeBuffs.ContainsKey(newBuffToAdd))
+            {
+                _activeBuffs[newBuffToAdd] = new List<BuffView>();
+            }
+
+            foreach (BuffViewGrid currentGrid in buffViewGrids)
+            {
+                _activeBuffs[newBuffToAdd].Add(currentGrid.GetBuffView());
+                newBuffToAdd.OnBuffEnter(_activeBuffs[newBuffToAdd].ToArray());
+            }
+
             newBuffToAdd.m_onBuffExpire += () => { RemoveBuff(newBuffToAdd); };
         }
 
         public virtual void RemoveBuff(Buff buffToRemove)
         {
-            buffUIView.RemoveBuffView(_activeBuffs[buffToRemove]);
+            foreach (BuffViewGrid currentGrid in buffViewGrids)
+            {
+                foreach (BuffView buffView in _activeBuffs[buffToRemove])
+                {
+                    currentGrid.RemoveBuffView(buffView);
+                }
+            }
+
             _activeBuffs.Remove(buffToRemove);
         }
 

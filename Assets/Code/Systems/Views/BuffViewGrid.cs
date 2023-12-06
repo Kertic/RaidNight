@@ -5,7 +5,7 @@ using UnityEngine.Pool;
 
 namespace Code.Systems.Views
 {
-    public class BuffUIView : MonoBehaviour
+    public class BuffViewGrid : MonoBehaviour
     {
         [SerializeField]
         private BuffView buffViewPrefab;

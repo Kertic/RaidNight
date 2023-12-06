@@ -60,9 +60,9 @@ namespace Code.Entity
             foreach (BuffViewGrid currentGrid in buffViewGrids)
             {
                 _activeBuffs[newBuffToAdd].Add(currentGrid.GetBuffView());
-                newBuffToAdd.OnBuffEnter(_activeBuffs[newBuffToAdd].ToArray());
             }
 
+            newBuffToAdd.OnBuffEnter(_activeBuffs[newBuffToAdd].ToArray());
             newBuffToAdd.m_onBuffExpire += () => { RemoveBuff(newBuffToAdd); };
         }
 

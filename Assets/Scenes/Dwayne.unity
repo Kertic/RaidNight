@@ -369,6 +369,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   floatingCombatTextTemplate: {fileID: 2668294953916072671, guid: c9cfbc2de579da2428b78dae2eed9ede, type: 3}
+  combatTextVariance: 1
+  frequencyOfSpawnLimit: 0.1
 --- !u!114 &571434742 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2272953169541011387, guid: 48452b7939a47f143b6589d9b7777031, type: 3}
@@ -1033,7 +1035,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1743158770, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
       propertyPath: returnDuration
-      value: 2
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 386731922647339732, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
       propertyPath: buffViewGrids.Array.data[1]
@@ -1132,9 +1134,21 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 301148522}
     - target: {fileID: 5405098573614200258, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
+      propertyPath: maxWispCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5405098573614200258, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
       propertyPath: skillBarUIView
       value: 
       objectReference: {fileID: 1087644062}
+    - target: {fileID: 5405098573614200258, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
+      propertyPath: mischiefDotDuration
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5405098573614200258, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
+      propertyPath: mischiefTotalDamageTicks
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 332249af7d2b39d4fba428e48da3f440, type: 3}
 --- !u!224 &3295558874927957164 stripped
@@ -1244,6 +1258,10 @@ PrefabInstance:
     - target: {fileID: 7175471328909988441, guid: 5e3ba971e0f80c642a1a9131f6074ae4, type: 3}
       propertyPath: m_Name
       value: TrainingDummy4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7175471328961932626, guid: 5e3ba971e0f80c642a1a9131f6074ae4, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e3ba971e0f80c642a1a9131f6074ae4, type: 3}

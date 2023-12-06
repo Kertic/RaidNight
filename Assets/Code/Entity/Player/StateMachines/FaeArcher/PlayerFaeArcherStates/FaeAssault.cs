@@ -23,7 +23,7 @@ namespace Code.Entity.Player.StateMachines.FaeArcher.PlayerFaeArcherStates
         public override void OnStateEnter()
         {
             base.OnStateEnter();
-            _faeAssaultBuff = new FaeAssaultBuff(m_controlsStateMachine._PlayerEntity, _buffDuration, _buffIcon, _attSpeedAmp);
+            _faeAssaultBuff = new FaeAssaultBuff(m_controlsStateMachine, m_controlsStateMachine._PlayerEntity, _buffDuration, _buffIcon, _attSpeedAmp, 10.0f);
             m_controlsStateMachine._PlayerEntity.AddBuff(_faeAssaultBuff);
             m_controlsStateMachine.ChangeToIdleState();
         }

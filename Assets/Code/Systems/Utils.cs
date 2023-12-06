@@ -1,10 +1,22 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Code.Systems
 {
     public static class Utils
     {
+        private static IEnumerator InvokeRoutine(Action f, float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            f();
+        }
+
+        public static void Invoke(this MonoBehaviour mb, Action f, float delay)
+        {
+            mb.StartCoroutine(InvokeRoutine(f, delay));
+        }
+
         public static class Vector2
         {
             /*
@@ -35,6 +47,14 @@ namespace Code.Systems
                 /* Get the spawn position */
                 UnityEngine.Vector3 spawnPos = center + spawnDir * radius; // Radius is just the distance away from the point
                 return spawnPos;
+            }
+        }
+
+        public static class Float
+        {
+            public static float Mod(float a, float b)
+            {
+                return (a % b + b) % b;
             }
         }
     }

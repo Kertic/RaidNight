@@ -1,4 +1,6 @@
 using Code.Entity.Player;
+using Code.Entity.Player.StateMachines.FaeArcher;
+using Code.Entity.Player.Weapon.OnHitEffects;
 using UnityEngine;
 
 namespace Code.Entity.Buffs.PlayerBuffs.FaeArcherBuffs
@@ -7,10 +9,14 @@ namespace Code.Entity.Buffs.PlayerBuffs.FaeArcherBuffs
     {
         private float _increaseAmount;
         private PlayerData.StatModifier _modifier;
+        private PlayerFaeArcherStateMachine _stateMachine;
+        private DealDamageOnHit _onHit;
 
-        public FaeAssaultBuff(PlayerEntity affectedEntity, float duration, Sprite buffIcon, float increaseAmount) : base(affectedEntity, duration, buffIcon)
+        public FaeAssaultBuff(PlayerFaeArcherStateMachine stateMachine, PlayerEntity affectedEntity, float duration, Sprite buffIcon, float increaseAmount, float onHitDamageAmount) : base(affectedEntity, duration, buffIcon)
         {
             _increaseAmount = increaseAmount;
+            _stateMachine = stateMachine;
+            _onHit = new DealDamageOnHit(onHitDamageAmount);
         }
 
         public override void OnBuffEnter(BuffView[] buffViews)
@@ -25,6 +31,7 @@ namespace Code.Entity.Buffs.PlayerBuffs.FaeArcherBuffs
             );
             m_playerEntity._PlayerData.AddModifier(_modifier, PlayerData.StatType.ATTSPEED);
             m_playerEntity._PlayerData.AddModifier(_modifier, PlayerData.StatType.MOVESPEED);
+            _stateMachine._OnHitEffects.Add(_onHit);
         }
 
         public override void OnBuffExit(BuffView[] buffViews)
@@ -32,6 +39,7 @@ namespace Code.Entity.Buffs.PlayerBuffs.FaeArcherBuffs
             base.OnBuffExit(buffViews);
             m_playerEntity._PlayerData.RemoveModifier(_modifier, PlayerData.StatType.ATTSPEED);
             m_playerEntity._PlayerData.RemoveModifier(_modifier, PlayerData.StatType.MOVESPEED);
+            _stateMachine._OnHitEffects.Remove(_onHit);
         }
     }
 }

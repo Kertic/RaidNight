@@ -49,8 +49,8 @@ namespace Code.Systems.Views
         }
 
         #endregion
-        
-        
+
+
         public BuffView GetBuffView()
         {
             BuffView newBuff = _buffViewPool.Get();
@@ -59,7 +59,10 @@ namespace Code.Systems.Views
 
         public void RemoveBuffView(BuffView buffViewToRemove)
         {
-            _buffViewPool.Release(buffViewToRemove);
+            if (_activeBuffs.Contains(buffViewToRemove))
+            {
+                _buffViewPool.Release(buffViewToRemove);
+            }
         }
     }
 }

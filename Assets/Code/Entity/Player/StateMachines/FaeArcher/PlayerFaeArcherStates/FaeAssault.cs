@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-using Code.Entity.Buffs;
-using Code.Entity.Buffs.PlayerBuffs;
+﻿using Code.Entity.Buffs;
 using Code.Entity.Buffs.PlayerBuffs.FaeArcherBuffs;
-using Code.Systems.Views;
 using UnityEngine;
 
 namespace Code.Entity.Player.StateMachines.FaeArcher.PlayerFaeArcherStates

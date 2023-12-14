@@ -2,12 +2,10 @@ using System;
 using System.Collections.Generic;
 using Code.Entity.Buffs;
 using Code.Entity.Buffs.PlayerBuffs.FaeArcherBuffs;
-using Code.Entity.Player.StateMachines.BaseStates.PlayerControlStates;
 using Code.Entity.Player.StateMachines.FaeArcher.PlayerFaeArcherStates;
 using Code.Entity.Player.Views.FaeArcher;
 using Code.Entity.Player.Weapon;
 using Code.Entity.Player.Weapon.OnHitEffects;
-using Code.Systems.Views;
 using UnityEngine;
 
 namespace Code.Entity.Player.StateMachines.FaeArcher
@@ -65,7 +63,7 @@ namespace Code.Entity.Player.StateMachines.FaeArcher
         private FireEnchantedArrow _FireEnchantedArrow { get; set; }
         private FaeAssault _FaeAssault { get; set; }
         private CommuneWithFae _CommuneWithFae { get; set; }
-        public FaeArcherView _SpiralWispView { get; private set; }
+        public FaeArcherView _FaeArcherView { get; private set; }
 
         public List<OnHitEffect> _OnHitEffects => _onHitEffects;
 
@@ -75,14 +73,12 @@ namespace Code.Entity.Player.StateMachines.FaeArcher
 
         private BuffView _faeAssaultBuffView;
         private List<OnHitEffect> _onHitEffects;
+        private List<Entity> _mischiefAfflictedEntities;
 
         private void EnchantedArrowOnEntityHit(Entity hitEntity)
         {
             hitEntity.TakeDamage(enchantedArrowDamageMultiplier * _PlayerData._BaseAttackDamage);
-            foreach (OnHitEffect onHitEffect in _OnHitEffects)
-            {
-                onHitEffect.ApplyEffectToEntity(hitEntity);
-            }
+            ApplyOnHitEffects(hitEntity);
             m_onHitEntity?.Invoke(hitEntity);
         }
 
@@ -90,6 +86,20 @@ namespace Code.Entity.Player.StateMachines.FaeArcher
         {
             MischiefDamageDebuff dotDebuff = new MischiefDamageDebuff(hitEntity, mischiefDotDuration, mischiefDotDebuffIcon, mischiefDotTotalDamage, mischiefTotalDamageTicks);
             hitEntity.AddBuff(dotDebuff);
+            _mischiefAfflictedEntities.Add(hitEntity);
+            dotDebuff.m_onBuffExpire += () => { _mischiefAfflictedEntities.Remove(hitEntity); };
+        }
+
+        private void ApplyOnHitEffects(Entity hitEntity)
+        {
+            foreach (OnHitEffect onHitEffect in _OnHitEffects)
+            {
+                onHitEffect.ApplyEffectToEntity(hitEntity);
+                foreach (Entity mischiefAfflictedEntity in _mischiefAfflictedEntities)
+                {
+                    onHitEffect.ApplyEffectToEntity(mischiefAfflictedEntity);
+                }
+            }
         }
 
         private void OnValidate()
@@ -105,14 +115,15 @@ namespace Code.Entity.Player.StateMachines.FaeArcher
         {
             base.Awake();
             _onHitEffects = new List<OnHitEffect>();
-            _SpiralWispView = GetComponent<FaeArcherView>();
+            _mischiefAfflictedEntities = new List<Entity>();
+            _FaeArcherView = GetComponent<FaeArcherView>();
             _Dash = _Flit = new Flit(_PlayerData, _EntityPhysics, this, flitMaxDistance, flitDuration, flitCooldown);
             _PrimaryAttack = _FireEnchantedArrow = new FireEnchantedArrow(_PlayerData, _EntityPhysics, this, castBarView, enchantedArrowCooldown);
             _SecondaryAttack = _FaeAssault = new FaeAssault(_PlayerData, _EntityPhysics, this, faeAssaultDuration, faeAssaultCooldown, faeAssaultAttackSpeedAmp, faeAssaultBuffIcon);
             _Ultimate = _CommuneWithFae = new CommuneWithFae(_PlayerData, _EntityPhysics, this, communeCooldown, communeAbilityReductionTime);
             mischiefStateMachine.m_onFiredTrackingProjectile += projectile =>
             {
-                _SpiralWispView.AttachWispsToProjectile(projectile);
+                _FaeArcherView.AttachWispsToProjectile(projectile);
                 projectile.m_onEntityHit += hit2Ds =>
                 {
                     foreach (RaycastHit2D hit in hit2Ds)
@@ -145,6 +156,7 @@ namespace Code.Entity.Player.StateMachines.FaeArcher
         protected override void Start()
         {
             base.Start();
+            _FaeArcherView.SetChargeProgress(0.0f);
             SetAutoAttackEnabled(false);
         }
 
@@ -199,7 +211,7 @@ namespace Code.Entity.Player.StateMachines.FaeArcher
                 return;
             }
 
-            _SpiralWispView.AddWispToSwirlingWisps();
+            _FaeArcherView.AddWispToSwirlingWisps();
             _currentWispCount++;
         }
 
@@ -207,7 +219,7 @@ namespace Code.Entity.Player.StateMachines.FaeArcher
         {
             if (_currentWispCount == 0)
                 return false;
-            _SpiralWispView.RemoveWispFromSwirlingWisps();
+            _FaeArcherView.RemoveWispFromSwirlingWisps();
             _currentWispCount--;
             return true;
         }
@@ -217,6 +229,11 @@ namespace Code.Entity.Player.StateMachines.FaeArcher
             _Flit.ReduceCooldown(reductionTime);
             _FaeAssault.ReduceCooldown(reductionTime);
             _FireEnchantedArrow.ReduceCooldown(reductionTime);
+        }
+
+        public void SetChargeShotProgress(float progress)
+        {
+            _FaeArcherView.SetChargeProgress(progress);
         }
     }
 }

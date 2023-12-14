@@ -23,7 +23,7 @@ namespace Code.Entity.Player.StateMachines.FaeArcher.PlayerFaeArcherStates
 
         private float GetCastingProgress()
         {
-            return (Time.time - _castStart) / _castTime;
+            return Mathf.Min(1.0f, (Time.time - _castStart) / _castTime);
         }
 
         public override void OnStateEnter()
@@ -44,12 +44,14 @@ namespace Code.Entity.Player.StateMachines.FaeArcher.PlayerFaeArcherStates
             _castBar.SetText("");
             m_controlsStateMachine.ReleaseAutoAttackHaltHandle(_haltHandle);
             m_controlsStateMachine.AddWispCharge();
+            m_controlsStateMachine.SetChargeShotProgress(0.0f);
         }
 
         public override void StateUpdate()
         {
             base.StateUpdate();
             _castBar.SetProgress(GetCastingProgress());
+            m_controlsStateMachine.SetChargeShotProgress(GetCastingProgress());
         }
 
         public override void OnReleaseButtonInput(PlayerControlsStateMachine.InputButton button)
@@ -68,7 +70,7 @@ namespace Code.Entity.Player.StateMachines.FaeArcher.PlayerFaeArcherStates
         public override void OnReceiveButtonInput(PlayerControlsStateMachine.InputButton button)
         {
             base.OnReceiveButtonInput(button);
-            
+
             switch (button)
             {
                 case PlayerControlsStateMachine.InputButton.DASH:

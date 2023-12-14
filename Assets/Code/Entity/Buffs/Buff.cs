@@ -37,8 +37,9 @@ namespace Code.Entity.Buffs
             {
                 buffView.SetImage(null);
                 buffView.SetIconText("");
-                m_onBuffExpire?.Invoke();
             }
+
+            m_onBuffExpire?.Invoke();
         }
 
         public virtual void OnBuffUpdate(BuffView[] buffViews)

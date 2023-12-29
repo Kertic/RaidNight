@@ -28,7 +28,7 @@ namespace Code.Entity
             _activeBuffs = new Dictionary<Buff, List<BuffView>>();
         }
 
-        public virtual void TakeDamage(float damage)
+        public virtual void TakeDamage(float damage, Color colorOfDamage)
         {
             m_currentHealth = Mathf.Clamp(m_currentHealth - (float)damage, 0.0f, (float)maxHealth);
             m_view.SetHealthPercent((float)m_currentHealth / maxHealth);
@@ -39,7 +39,7 @@ namespace Code.Entity
                 OnDeath();
             }
 
-            GameMaster.m_instance.SpawnFloatingTextAtTransform(transform, damage.ToString(damage > 5 ? "0" : "0.0"), Color.white);
+            GameMaster.m_instance.SpawnFloatingTextAtTransform(transform, damage.ToString(damage > 5 ? "0" : "0.0"), colorOfDamage);
         }
 
         protected virtual void FixedUpdate()

@@ -67,7 +67,7 @@ namespace Code.Entity
             m_view.SetHealthbarText("I have died.");
         }
 
-        public override void TakeDamage(float damage)
+        public override void TakeDamage(float damage, Color colorOfDamage)
         {
             if (m_currentHealth <= 0)
             {
@@ -75,7 +75,7 @@ namespace Code.Entity
                 m_view.SetHealthbarText("");
             }
 
-            base.TakeDamage(damage);
+            base.TakeDamage(damage, colorOfDamage);
         }
 
         private void OnDrawGizmosSelected()

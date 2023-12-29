@@ -20,7 +20,6 @@ namespace Code.Entity.Player.StateMachines.FaeArcher
         [SerializeField]
         private float mischiefDotTotalDamage, mischiefDotDuration;
 
-
         [SerializeField]
         private int maxWispCount, mischiefTotalDamageTicks;
 
@@ -58,26 +57,21 @@ namespace Code.Entity.Player.StateMachines.FaeArcher
         [SerializeField]
         private float communeAbilityReductionTime;
 
-
         private Flit _Flit { get; set; }
         private FireEnchantedArrow _FireEnchantedArrow { get; set; }
         private FaeAssault _FaeAssault { get; set; }
         private CommuneWithFae _CommuneWithFae { get; set; }
         public FaeArcherView _FaeArcherView { get; private set; }
 
-        public List<OnHitEffect> _OnHitEffects => _onHitEffects;
-
-        public Action<Entity> m_onHitEntity;
 
         private int _currentWispCount;
 
         private BuffView _faeAssaultBuffView;
-        private List<OnHitEffect> _onHitEffects;
         private List<Entity> _mischiefAfflictedEntities;
 
         private void EnchantedArrowOnEntityHit(Entity hitEntity)
         {
-            hitEntity.TakeDamage(enchantedArrowDamageMultiplier * _PlayerData._BaseAttackDamage);
+            hitEntity.TakeDamage(enchantedArrowDamageMultiplier * _PlayerData._BaseAttackDamage, Color.yellow);
             ApplyOnHitEffects(hitEntity);
             m_onHitEntity?.Invoke(hitEntity);
         }
@@ -90,17 +84,6 @@ namespace Code.Entity.Player.StateMachines.FaeArcher
             dotDebuff.m_onBuffExpire += () => { _mischiefAfflictedEntities.Remove(hitEntity); };
         }
 
-        private void ApplyOnHitEffects(Entity hitEntity)
-        {
-            foreach (OnHitEffect onHitEffect in _OnHitEffects)
-            {
-                onHitEffect.ApplyEffectToEntity(hitEntity);
-                foreach (Entity mischiefAfflictedEntity in _mischiefAfflictedEntities)
-                {
-                    onHitEffect.ApplyEffectToEntity(mischiefAfflictedEntity);
-                }
-            }
-        }
 
         private void OnValidate()
         {
@@ -111,15 +94,27 @@ namespace Code.Entity.Player.StateMachines.FaeArcher
             }
         }
 
+        public override void ApplyOnHitEffects(Entity hitEntity)
+        {
+            base.ApplyOnHitEffects(hitEntity);
+
+            foreach (OnHitEffect onHitEffect in _OnHitEffects)
+            {
+                foreach (Entity mischiefAfflictedEntity in _mischiefAfflictedEntities)
+                {
+                    onHitEffect.ApplyEffectToEntity(mischiefAfflictedEntity);
+                }
+            }
+        }
+
         protected override void Awake()
         {
             base.Awake();
-            _onHitEffects = new List<OnHitEffect>();
             _mischiefAfflictedEntities = new List<Entity>();
             _FaeArcherView = GetComponent<FaeArcherView>();
             _Dash = _Flit = new Flit(_PlayerData, _EntityPhysics, this, flitMaxDistance, flitDuration, flitCooldown);
-            _PrimaryAttack = _FireEnchantedArrow = new FireEnchantedArrow(_PlayerData, _EntityPhysics, this, castBarView, enchantedArrowCooldown);
-            _SecondaryAttack = _FaeAssault = new FaeAssault(_PlayerData, _EntityPhysics, this, faeAssaultDuration, faeAssaultCooldown, faeAssaultAttackSpeedAmp, faeAssaultBuffIcon);
+            _SecondaryAttack = _FireEnchantedArrow = new FireEnchantedArrow(_PlayerData, _EntityPhysics, this, castBarView, enchantedArrowCooldown);
+            _UtilitySkill = _FaeAssault = new FaeAssault(_PlayerData, _EntityPhysics, this, faeAssaultDuration, faeAssaultCooldown, faeAssaultAttackSpeedAmp, faeAssaultBuffIcon);
             _Ultimate = _CommuneWithFae = new CommuneWithFae(_PlayerData, _EntityPhysics, this, communeCooldown, communeAbilityReductionTime);
             mischiefStateMachine.m_onFiredTrackingProjectile += projectile =>
             {
@@ -157,14 +152,13 @@ namespace Code.Entity.Player.StateMachines.FaeArcher
         {
             base.Start();
             _FaeArcherView.SetChargeProgress(0.0f);
-            SetAutoAttackEnabled(false);
         }
 
-        public override void ChangeToPrimaryAttack()
+        public override void ChangeToSecondaryAttack()
         {
             _FireEnchantedArrow.SetCastTime(fireEnchantedArrowCastTime * (1.0f / _PlayerData._AttackSpeed));
             _FireEnchantedArrow.SetMaxCooldown(enchantedArrowCooldown * (1.0f / _PlayerData._AttackSpeed));
-            base.ChangeToPrimaryAttack();
+            base.ChangeToSecondaryAttack();
         }
 
         public override void ChangeToDash()
@@ -174,10 +168,10 @@ namespace Code.Entity.Player.StateMachines.FaeArcher
             base.ChangeToDash();
         }
 
-        public override void ChangeToSecondaryAttack()
+        public override void ChangeToUtilitySkill()
         {
             _FaeAssault.SetBuffDuration(faeAssaultDuration);
-            base.ChangeToSecondaryAttack();
+            base.ChangeToUtilitySkill();
         }
 
         public override void ChangeToUltimate()

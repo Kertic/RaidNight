@@ -8,11 +8,12 @@ namespace Code.Entity.Player.Views
     {
         [SerializeField]
         private Image targetingReticle;
+
         private Transform _trackedTransform;
 
         private void Awake()
         {
-            targetingReticle.color = new Color(0.0f, 0.0f, 0.0f, 0.0f);
+            SetVisible(false);
         }
 
         void Start()
@@ -28,7 +29,18 @@ namespace Code.Entity.Player.Views
         public void SetTarget(Transform target)
         {
             _trackedTransform = target;
-            targetingReticle.color = Color.white;
+        }
+
+        public void SetColor(Color newColor)
+        {
+            targetingReticle.color = newColor;
+        }
+
+        public void SetVisible(bool isVisible)
+        {
+            Color targetingReticleColor = targetingReticle.color;
+            targetingReticleColor.a = isVisible ? 1.0f : 0.0f;
+            SetColor(targetingReticleColor);
         }
 
         public void SetStaticLocation(Vector3 position)

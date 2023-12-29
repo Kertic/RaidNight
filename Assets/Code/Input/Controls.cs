@@ -55,6 +55,15 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Utility"",
+                    ""type"": ""Button"",
+                    ""id"": ""d8ac67a5-efbf-415e-9ea6-cf08d91e9286"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Dash"",
                     ""type"": ""Button"",
                     ""id"": ""842a9053-f447-4528-9130-7601dfc3c0b3"",
@@ -256,6 +265,17 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""action"": ""MousePos"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0c640d9b-672d-435d-9e52-8fa959ef4378"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Utility"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -267,6 +287,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         m_Gameplay_Movement = m_Gameplay.FindAction("Movement", throwIfNotFound: true);
         m_Gameplay_PrimaryFire = m_Gameplay.FindAction("PrimaryFire", throwIfNotFound: true);
         m_Gameplay_SecondaryFire = m_Gameplay.FindAction("SecondaryFire", throwIfNotFound: true);
+        m_Gameplay_Utility = m_Gameplay.FindAction("Utility", throwIfNotFound: true);
         m_Gameplay_Dash = m_Gameplay.FindAction("Dash", throwIfNotFound: true);
         m_Gameplay_Ultimate = m_Gameplay.FindAction("Ultimate", throwIfNotFound: true);
         m_Gameplay_Zoom = m_Gameplay.FindAction("Zoom", throwIfNotFound: true);
@@ -333,6 +354,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Movement;
     private readonly InputAction m_Gameplay_PrimaryFire;
     private readonly InputAction m_Gameplay_SecondaryFire;
+    private readonly InputAction m_Gameplay_Utility;
     private readonly InputAction m_Gameplay_Dash;
     private readonly InputAction m_Gameplay_Ultimate;
     private readonly InputAction m_Gameplay_Zoom;
@@ -344,6 +366,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         public InputAction @Movement => m_Wrapper.m_Gameplay_Movement;
         public InputAction @PrimaryFire => m_Wrapper.m_Gameplay_PrimaryFire;
         public InputAction @SecondaryFire => m_Wrapper.m_Gameplay_SecondaryFire;
+        public InputAction @Utility => m_Wrapper.m_Gameplay_Utility;
         public InputAction @Dash => m_Wrapper.m_Gameplay_Dash;
         public InputAction @Ultimate => m_Wrapper.m_Gameplay_Ultimate;
         public InputAction @Zoom => m_Wrapper.m_Gameplay_Zoom;
@@ -366,6 +389,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @SecondaryFire.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnSecondaryFire;
                 @SecondaryFire.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnSecondaryFire;
                 @SecondaryFire.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnSecondaryFire;
+                @Utility.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnUtility;
+                @Utility.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnUtility;
+                @Utility.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnUtility;
                 @Dash.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnDash;
                 @Dash.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnDash;
                 @Dash.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnDash;
@@ -391,6 +417,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @SecondaryFire.started += instance.OnSecondaryFire;
                 @SecondaryFire.performed += instance.OnSecondaryFire;
                 @SecondaryFire.canceled += instance.OnSecondaryFire;
+                @Utility.started += instance.OnUtility;
+                @Utility.performed += instance.OnUtility;
+                @Utility.canceled += instance.OnUtility;
                 @Dash.started += instance.OnDash;
                 @Dash.performed += instance.OnDash;
                 @Dash.canceled += instance.OnDash;
@@ -412,6 +441,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnPrimaryFire(InputAction.CallbackContext context);
         void OnSecondaryFire(InputAction.CallbackContext context);
+        void OnUtility(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
         void OnUltimate(InputAction.CallbackContext context);
         void OnZoom(InputAction.CallbackContext context);

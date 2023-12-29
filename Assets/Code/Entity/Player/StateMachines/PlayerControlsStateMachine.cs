@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using Code.Camera;
-using Code.Entity.Buffs;
 using Code.Entity.Player.StateMachines.BaseStates.PlayerControlStates;
 using Code.Entity.Player.StateMachines.BaseStates.PlayerControlStates.SubStates.Actionable;
 using Code.Entity.Player.StateMachines.BaseStates.PlayerControlStates.SuperStates;
 using Code.Entity.Player.Views;
+using Code.Entity.Player.Weapon.OnHitEffects;
 using Code.Systems.Views;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -21,6 +21,7 @@ namespace Code.Entity.Player.StateMachines
             DASH,
             PRIMARY,
             SECONDARY,
+            UTILITYSKILL,
             ULTIMATE,
             NUMOFINPUTBUTTONS
         }
@@ -43,9 +44,6 @@ namespace Code.Entity.Player.StateMachines
         [SerializeField]
         protected PlayerCam cam;
 
-        [SerializeField]
-        protected TargetIndicatorView targetIndicatorView;
-
         [Header("Views")]
         [SerializeField]
         protected PlayerCastView castBarView;
@@ -54,7 +52,6 @@ namespace Code.Entity.Player.StateMachines
         protected SkillBarUIView skillBarUIView;
 
         private List<AttackHaltHandle> _handles;
-        public Entity _AutoAttackTarget { get; private set; }
         public PlayerData _PlayerData { get; private set; }
         public Vector2 _MovementDirection { get; private set; }
         public EntityPhysics _EntityPhysics { get; private set; }
@@ -64,24 +61,37 @@ namespace Code.Entity.Player.StateMachines
         protected Running _Running { get; set; }
         protected ExecuteSkill _PrimaryAttack { get; set; }
         protected ExecuteSkill _SecondaryAttack { get; set; }
+        protected ExecuteSkill _UtilitySkill { get; set; }
         protected ExecuteSkill _Dash { get; set; }
         protected ExecuteSkill _Ultimate { get; set; }
-
+        
         public SkillBarUIView _SkillBarUIView => skillBarUIView;
-
+        public List<OnHitEffect> _OnHitEffects => _onHitEffects;
         public Action m_haltAutoAttack;
         public Action m_resetAutoAttack;
         public Action m_resumeAutoAttack;
         public Action<bool> m_enableAutoAttack;
+        public Action<Entity> m_onHitEntity;
+        private List<OnHitEffect> _onHitEffects;
 
         public static bool DidEffectProc(float procChance, float luckStat)
         {
             return Random.Range(0.0f, 1.0f) <= 1.0f - Mathf.Pow((1.0f - procChance), luckStat + 1.0f);
         }
 
+
+        public virtual void ApplyOnHitEffects(Entity hitEntity)
+        {
+            foreach (OnHitEffect onHitEffect in _OnHitEffects)
+            {
+                onHitEffect.ApplyEffectToEntity(hitEntity);
+            }
+        }
+
         protected virtual void Awake()
         {
             _PlayerData = GetComponent<PlayerData>();
+            _onHitEffects = new List<OnHitEffect>();
             _IsAutoAttackEnabled = true;
             _EntityPhysics = GetComponent<EntityPhysics>();
             _PlayerEntity = GetComponent<PlayerEntity>();
@@ -94,6 +104,7 @@ namespace Code.Entity.Player.StateMachines
             {
                 { _controls.Gameplay.PrimaryFire, InputButton.PRIMARY },
                 { _controls.Gameplay.SecondaryFire, InputButton.SECONDARY },
+                { _controls.Gameplay.Utility, InputButton.UTILITYSKILL },
                 { _controls.Gameplay.Dash, InputButton.DASH },
                 { _controls.Gameplay.Ultimate, InputButton.ULTIMATE },
             };
@@ -157,12 +168,6 @@ namespace Code.Entity.Player.StateMachines
             m_currentState.OnCollisionStay2D(other);
         }
 
-        protected void SetAutoAttackTarget(Entity hitEntity)
-        {
-            _AutoAttackTarget = hitEntity;
-            targetIndicatorView.SetTarget(hitEntity.transform);
-        }
-
         public void ChangeToRunningState()
         {
             ChangeState(_Running);
@@ -186,6 +191,14 @@ namespace Code.Entity.Player.StateMachines
             if (_SecondaryAttack != null && _SecondaryAttack.IsSkillReady())
             {
                 ChangeState(_SecondaryAttack);
+            }
+        }
+
+        public virtual void ChangeToUtilitySkill()
+        {
+            if (_UtilitySkill != null && _UtilitySkill.IsSkillReady())
+            {
+                ChangeState(_UtilitySkill);
             }
         }
 
@@ -235,8 +248,9 @@ namespace Code.Entity.Player.StateMachines
             }
         }
 
-
-
-
+        public void SetPrimaryAttackAction(ExecuteSkill newPrimaryAttack)
+        {
+            _PrimaryAttack = newPrimaryAttack;
+        }
     }
 }

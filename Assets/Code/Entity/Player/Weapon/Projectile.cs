@@ -10,7 +10,7 @@ namespace Code.Entity.Player.Weapon
     {
         public Action<RaycastHit2D[]> m_onEntityHit;
         public Action<RaycastHit2D[]> m_onWallHit;
-        public Action<RaycastHit2D[]> m_onTrigger;
+        public Action<Dictionary<string, RaycastHit2D>> m_onTrigger;
 
         protected EntityPhysics m_entityPhysics;
         protected Vector2 m_continuousForce;
@@ -45,11 +45,9 @@ namespace Code.Entity.Player.Weapon
             }
         }
 
-        private void OnRaycastTriggersDetected(Dictionary<string, RaycastHit2D> collisions)
+        protected virtual void OnRaycastTriggersDetected(Dictionary<string, RaycastHit2D> collisions)
         {
-            RaycastHit2D[] hits = new RaycastHit2D[collisions.Count];
-            collisions.Values.CopyTo(hits, 0);
-            m_onTrigger?.Invoke(hits);
+            m_onTrigger?.Invoke(collisions);
         }
 
         private void OnEnable()

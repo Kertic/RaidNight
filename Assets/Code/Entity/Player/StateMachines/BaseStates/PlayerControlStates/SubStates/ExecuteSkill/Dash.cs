@@ -5,7 +5,6 @@ namespace Code.Entity.Player.StateMachines.BaseStates.PlayerControlStates.SubSta
     public class Dash : SuperStates.ExecuteSkill
     {
         private bool _active;
-        private PlayerControlsStateMachine.AttackHaltHandle _haltHandle;
 
         protected float m_dashDuration;
         protected Vector2 m_dashVector;
@@ -27,14 +26,12 @@ namespace Code.Entity.Player.StateMachines.BaseStates.PlayerControlStates.SubSta
                 OnDashMovementEnd();
                 Debug.Log("Dash Movement Ended");
             });
-            _haltHandle = m_controlsStateMachine.HaltAutoAttacks();
         }
 
         public override void OnStateExit()
         {
             base.OnStateExit();
             _active = false;
-            m_controlsStateMachine.ReleaseAutoAttackHaltHandle(_haltHandle);
         }
 
         private void OnDashMovementEnd()

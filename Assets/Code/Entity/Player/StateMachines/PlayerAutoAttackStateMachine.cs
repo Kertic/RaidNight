@@ -1,4 +1,7 @@
-﻿using Code.Camera;
+﻿using System;
+using System.Collections.Generic;
+using Code.Camera;
+using Code.Entity.Player.StateMachines.BaseStates.PlayerControlStates.SubStates.ExecuteSkill;
 using Code.Entity.Player.Views;
 using Code.Entity.Player.Weapon;
 using Code.Entity.Player.Weapon.PlayerWeaponStates;
@@ -6,6 +9,7 @@ using UnityEngine;
 
 namespace Code.Entity.Player.StateMachines
 {
+    [RequireComponent(typeof(TrackingWeapon))]
     public class PlayerAutoAttackStateMachine : MonoBehaviour
     {
         protected PlayerWeaponState m_currentWeaponState;
@@ -22,15 +26,24 @@ namespace Code.Entity.Player.StateMachines
         protected PlayerControlsStateMachine playerControlsStateMachine;
 
         [SerializeField]
-        protected Weapon.TrackingWeapon weapon;
+        protected TrackingWeapon weapon;
 
         [SerializeField]
         protected PlayerCastView autoAttackCastView;
 
         [SerializeField]
-        protected float projectileSpeed, attackSpeedToCooldownMultiplier;
+        protected TargetIndicatorView targetIndicatorView, targetSelectionIndicatorView;
+
+        [SerializeField]
+        protected float projectileSpeed, attackSpeedToCooldownMultiplier, targetingDistanceThreshold;
 
         public PlayerControlsStateMachine _PlayerControlsStateMachine => playerControlsStateMachine;
+
+        public Entity _AutoAttackHightlightedTarget { get; private set; }
+        public Entity _AutoAttackTarget { get; private set; }
+
+        private SetAutoAttackTarget _setAttackTargetSkill;
+        private PlayerControlsStateMachine.AttackHaltHandle? _noTargetHandle;
 
         private void Awake()
         {
@@ -38,6 +51,8 @@ namespace Code.Entity.Player.StateMachines
             m_attackCharging = new AttackCharging(playerData, this);
             m_attackHalted = new AttackHalted(playerData, this);
             m_attackDisabled = new AttackDisabled(playerData, this);
+            _setAttackTargetSkill = new SetAutoAttackTarget(this, playerData, _PlayerControlsStateMachine._EntityPhysics, _PlayerControlsStateMachine, 0.0f);
+            playerControlsStateMachine.SetPrimaryAttackAction(_setAttackTargetSkill);
             playerControlsStateMachine.m_enableAutoAttack += isAutoAttackEnabled =>
             {
                 if (isAutoAttackEnabled)
@@ -48,12 +63,32 @@ namespace Code.Entity.Player.StateMachines
                 DisableAttacks();
                 autoAttackCastView.ChangeViewState(PlayerCastView.ViewState.HIDDEN);
             };
-            BeginAttackCharging();
+            HaltAttacks();
+        }
+
+        private void Start()
+        {
+            _noTargetHandle = playerControlsStateMachine.HaltAutoAttacks();
         }
 
         private void FixedUpdate()
         {
             m_currentWeaponState.StateUpdate();
+        }
+
+        private void Update()
+        {
+            GameObject[] selectableObjects = GameObject.FindGameObjectsWithTag("NonPlayerEntity");
+            targetSelectionIndicatorView.SetVisible(false);
+            _AutoAttackHightlightedTarget = null;
+            foreach (GameObject selectableObject in selectableObjects)
+            {
+                if (Vector2.Distance(PlayerCam.mousePosition, selectableObject.transform.position) <= targetingDistanceThreshold)
+                {
+                    SetAutoAttackSelection(selectableObject.transform);
+                    break;
+                }
+            }
         }
 
         protected void ChangeState(PlayerWeaponState newWeaponState)
@@ -90,16 +125,61 @@ namespace Code.Entity.Player.StateMachines
             autoAttackCastView.ChangeViewState(PlayerCastView.ViewState.COOLINGDOWN);
         }
 
+        protected void SetAutoAttackSelection(Transform targetedEntity)
+        {
+            _AutoAttackHightlightedTarget = targetedEntity.GetComponent<Entity>();
+            targetSelectionIndicatorView.SetTarget(targetedEntity.transform);
+            targetSelectionIndicatorView.SetVisible( _AutoAttackHightlightedTarget != _AutoAttackTarget );
+        }
+
+        private void SetAutoAttackTargetToHighlightedTarget()
+        {
+            _AutoAttackTarget = _AutoAttackHightlightedTarget;
+            targetIndicatorView.SetTarget(_AutoAttackHightlightedTarget.transform);
+            targetIndicatorView.SetVisible(true);
+
+            if (_noTargetHandle != null)
+            {
+                playerControlsStateMachine.ReleaseAutoAttackHaltHandle(_noTargetHandle.Value);
+            }
+
+            _noTargetHandle = null;
+        }
+
+        private void ClearAutoAttackTarget()
+        {
+            _AutoAttackTarget = null;
+            targetIndicatorView.SetVisible(false);
+            if (_noTargetHandle == null)
+            {
+                _noTargetHandle = playerControlsStateMachine.HaltAutoAttacks();
+            }
+        }
+
+        public void SetTarget()
+        {
+            if (_AutoAttackHightlightedTarget == null)
+            {
+                ClearAutoAttackTarget();
+                return;
+            }
+
+            SetAutoAttackTargetToHighlightedTarget();
+        }
+
         public virtual void FireAutoAttack()
         {
-            TrackingProjectile projectile = weapon.FireProjectile(playerControlsStateMachine._AutoAttackTarget.transform, projectileSpeed);
-            projectile.m_onEntityHit += hit2Ds =>
+            if (_AutoAttackTarget.transform == null)
             {
-                foreach (RaycastHit2D hit in hit2Ds)
-                {
-                    Entity entity = hit.collider.gameObject.GetComponent<Entity>();
-                    entity.TakeDamage(playerData._BaseAttackDamage);
-                }
+                HaltAttacks();
+                return;
+            }
+
+            TrackingProjectile projectile = weapon.FireProjectile(_AutoAttackTarget, projectileSpeed);
+            projectile.m_onHitTarget += entity =>
+            {
+                entity.TakeDamage(playerData._BaseAttackDamage, Color.white);
+                playerControlsStateMachine.ApplyOnHitEffects(entity);
             };
 
             BeginAttackCooldown();
@@ -116,7 +196,6 @@ namespace Code.Entity.Player.StateMachines
             {
                 Gizmos.color = Color.blue;
                 Vector3 mousePos = PlayerCam.mousePosition;
-                //mousePos.z = transform.position.z;
                 Gizmos.DrawWireCube(mousePos, Vector3.one);
                 Gizmos.color = Color.red;
                 Gizmos.DrawLine(mousePos, transform.position);

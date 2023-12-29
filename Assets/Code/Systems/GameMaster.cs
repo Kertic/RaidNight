@@ -56,7 +56,12 @@ namespace Code.Systems
         public void SpawnFloatingTextAtTransform(Transform transformToTrack, string textToShow, Color newColor)
         {
             FloatingCombatTextView text = _floatingCombatTextPool.Get();
-            this.Invoke(() => FireFloatingText(transformToTrack, textToShow, newColor, text), frequencyOfSpawnLimit * (_floatingCombatTextPool.CountActive - 1));
+            float finalFrequency = frequencyOfSpawnLimit * (_floatingCombatTextPool.CountActive - 1);
+            if (_floatingCombatTextPool.CountActive > 10)
+            {
+                finalFrequency = 0.01f;
+            }
+            this.Invoke(() => FireFloatingText(transformToTrack, textToShow, newColor, text), finalFrequency);
         }
 
         private void FireFloatingText(Transform transformToTrack, string textToShow, Color newColor, FloatingCombatTextView text)

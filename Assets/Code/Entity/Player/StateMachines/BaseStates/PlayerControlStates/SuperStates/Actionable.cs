@@ -25,6 +25,9 @@ namespace Code.Entity.Player.StateMachines.BaseStates.PlayerControlStates.SuperS
                 case PlayerControlsStateMachine.InputButton.SECONDARY:
                     m_controlsStateMachine.ChangeToSecondaryAttack();
                     break;
+                case PlayerControlsStateMachine.InputButton.UTILITYSKILL:
+                    m_controlsStateMachine.ChangeToUtilitySkill();
+                    break;
                 case PlayerControlsStateMachine.InputButton.ULTIMATE:
                     m_controlsStateMachine.ChangeToUltimate();
                     break;

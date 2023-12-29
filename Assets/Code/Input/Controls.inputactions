@@ -33,6 +33,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Utility",
+                    "type": "Button",
+                    "id": "d8ac67a5-efbf-415e-9ea6-cf08d91e9286",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Dash",
                     "type": "Button",
                     "id": "842a9053-f447-4528-9130-7601dfc3c0b3",
@@ -232,6 +241,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "MousePos",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0c640d9b-672d-435d-9e52-8fa959ef4378",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Utility",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

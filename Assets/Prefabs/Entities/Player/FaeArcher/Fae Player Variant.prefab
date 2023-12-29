@@ -157,7 +157,7 @@ MonoBehaviour:
   faeArcherStateMachine: {fileID: 5405098573614200258}
   mischiefSpinSpeed: 0.9
   mischiefSpinRadius: 1
-  returnDuration: 8
+  returnDuration: 4
   mischiefProjectileSpeed: 2
 --- !u!1 &2046571625
 GameObject:
@@ -367,17 +367,17 @@ PrefabInstance:
       propertyPath: m_fontColorGradient.topLeft.r
       value: 0.9811321
       objectReference: {fileID: 0}
-    - target: {fileID: 6168583815196744768, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
-      propertyPath: projectilePrefab
-      value: 
-      objectReference: {fileID: 6431110804601790196, guid: 93fd65079639ea04b86d784fbff7fb48, type: 3}
+    - target: {fileID: 1678095803229129863, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 7302240593839029537, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
       propertyPath: buffViewGrids.Array.size
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8755925105153396923, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8755925106638900893, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
       propertyPath: m_PresetInfoIsWorld
@@ -493,31 +493,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8755925106836426035, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
       propertyPath: m_Name
-      value: Fae Player
+      value: Fae Player Variant
       objectReference: {fileID: 0}
     - target: {fileID: 8755925106897326579, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
       propertyPath: playerControlsStateMachine
       value: 
       objectReference: {fileID: 5405098573614200258}
+    - target: {fileID: 8755925106897326579, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
+      propertyPath: targetingDistanceThreshold
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8755925106897326582, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
       propertyPath: m_Name
-      value: MischiefWeapon
+      value: AutoAttackWeapon
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8755925106836426025, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
-    - {fileID: 8755925106897326579, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
---- !u!114 &849795244230428908 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7764245092452230937, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
-  m_PrefabInstance: {fileID: 6920686292133261301}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0708fd31a711ed74790588302ba48b34, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1839857876071113414 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8755925106836426035, guid: 3af3640e94d36074e83d6b5224148704, type: 3}
@@ -551,12 +543,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 0}
-  targetIndicatorView: {fileID: 849795244230428908}
   castBarView: {fileID: 4858175139143665954}
   skillBarUIView: {fileID: 0}
   mischiefDotDebuffIcon: {fileID: 21300000, guid: 54e07f768709733408df49059b8ac813, type: 3}
   mischiefDotTotalDamage: 25
-  mischiefDotDuration: 1
+  mischiefDotDuration: 10
   maxWispCount: 0
   mischiefTotalDamageTicks: 5
   mischiefStateMachine: {fileID: 1743158770}

@@ -8,7 +8,6 @@ namespace Code.Entity.Player.StateMachines.FaeArcher.PlayerFaeArcherStates
     {
         private float _castTime;
         private float _castStart;
-        private PlayerControlsStateMachine.AttackHaltHandle _haltHandle;
         private PlayerCastView _castBar;
 
         public FireEnchantedArrow(PlayerData data, EntityPhysics entityPhysics, PlayerFaeArcherStateMachine controlsStateMachine, PlayerCastView castView, float cooldown) : base(data, entityPhysics, controlsStateMachine, cooldown)
@@ -32,7 +31,6 @@ namespace Code.Entity.Player.StateMachines.FaeArcher.PlayerFaeArcherStates
             _castBar.SetProgress(0.0f); //TODO This shouldn't be in the state likely.
             _castBar.ChangeViewState(PlayerCastView.ViewState.CHARGING);
             _castBar.SetText("Enchanted Arrow");
-            _haltHandle = m_controlsStateMachine.HaltAutoAttacks();
             _castStart = Time.time;
         }
 
@@ -42,7 +40,6 @@ namespace Code.Entity.Player.StateMachines.FaeArcher.PlayerFaeArcherStates
             _castBar.SetProgress(0.0f);
             _castBar.ChangeViewState(PlayerCastView.ViewState.HIDDEN);
             _castBar.SetText("");
-            m_controlsStateMachine.ReleaseAutoAttackHaltHandle(_haltHandle);
             m_controlsStateMachine.AddWispCharge();
             m_controlsStateMachine.SetChargeShotProgress(0.0f);
         }
@@ -60,7 +57,7 @@ namespace Code.Entity.Player.StateMachines.FaeArcher.PlayerFaeArcherStates
 
             switch (button)
             {
-                case PlayerControlsStateMachine.InputButton.PRIMARY:
+                case PlayerControlsStateMachine.InputButton.SECONDARY:
                     FireArrow();
                     m_controlsStateMachine.ChangeToIdleState();
                     break;

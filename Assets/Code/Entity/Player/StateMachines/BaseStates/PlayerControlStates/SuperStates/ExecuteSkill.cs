@@ -7,6 +7,7 @@ namespace Code.Entity.Player.StateMachines.BaseStates.PlayerControlStates.SuperS
     {
         protected float m_maxCooldown;
         protected float m_timeWhenAvailable;
+        private PlayerControlsStateMachine.AttackHaltHandle _haltHandle;
 
         public ExecuteSkill(PlayerData data, EntityPhysics entityPhysics, PlayerControlsStateMachine controlsStateMachine, float cooldown) : base(data, entityPhysics, controlsStateMachine)
         {
@@ -14,11 +15,15 @@ namespace Code.Entity.Player.StateMachines.BaseStates.PlayerControlStates.SuperS
             m_timeWhenAvailable = 0;
         }
 
-        public override void OnStateEnter() { }
+        public override void OnStateEnter()
+        {
+            _haltHandle = m_controlsStateMachine.HaltAutoAttacks();
+        }
 
         public override void OnStateExit()
         {
             m_timeWhenAvailable = m_maxCooldown + Time.time;
+            m_controlsStateMachine.ReleaseAutoAttackHaltHandle(_haltHandle);
         }
 
         public override void OnReceiveMovementInput(Vector2 direction) { }

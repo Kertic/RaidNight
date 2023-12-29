@@ -9,11 +9,11 @@ namespace Code.Entity.Player.Weapon
         [SerializeField]
         protected TProjectile projectilePrefab;
 
-        private ObjectPool<TProjectile> _projectilePool;
+        protected ObjectPool<TProjectile> m_projectilePool;
 
         private void Awake()
         {
-            _projectilePool = new ObjectPool<TProjectile>(SpawnProjectile, OnGetFromPool, OnReturnToPool,
+            m_projectilePool = new ObjectPool<TProjectile>(SpawnProjectile, OnGetFromPool, OnReturnToPool,
                 OnDestroyProjectile, true, 10, 500);
         }
 
@@ -31,7 +31,7 @@ namespace Code.Entity.Player.Weapon
             projectile.transform.position = transform.position;
         }
 
-        private void OnReturnToPool(TProjectile projectile)
+        protected virtual void OnReturnToPool(TProjectile projectile)
         {
             projectile.gameObject.SetActive(false);
             projectile.m_onEntityHit = null;
@@ -49,9 +49,9 @@ namespace Code.Entity.Player.Weapon
 
         public virtual TProjectile FireProjectile(Vector2 fireDirection, float projectileSpeed)
         {
-            TProjectile firedProjectile = _projectilePool.Get();
-            firedProjectile.m_onEntityHit += (_) => _projectilePool.Release(firedProjectile);
-            firedProjectile.m_onWallHit += (_) => _projectilePool.Release(firedProjectile);
+            TProjectile firedProjectile = m_projectilePool.Get();
+            firedProjectile.m_onEntityHit += (_) => m_projectilePool.Release(firedProjectile);
+            firedProjectile.m_onWallHit += (_) => m_projectilePool.Release(firedProjectile);
             firedProjectile.transform.position = transform.position;
             firedProjectile.FireProjectile(fireDirection, projectileSpeed);
             return firedProjectile;

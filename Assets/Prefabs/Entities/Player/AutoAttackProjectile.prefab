@@ -256,5 +256,5 @@ MonoBehaviour:
   collisionBuffer: 0
   collidingTags:
   - Wall
+  triggerTags:
   - NonPlayerEntity
-  triggerTags: []

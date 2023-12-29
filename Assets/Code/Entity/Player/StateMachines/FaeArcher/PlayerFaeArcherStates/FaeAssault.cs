@@ -23,6 +23,7 @@ namespace Code.Entity.Player.StateMachines.FaeArcher.PlayerFaeArcherStates
             _faeAssaultBuff = new FaeAssaultBuff(m_controlsStateMachine, m_controlsStateMachine._PlayerEntity, _buffDuration, _buffIcon, _attSpeedAmp, 10.0f);
             m_controlsStateMachine._PlayerEntity.AddBuff(_faeAssaultBuff);
             m_controlsStateMachine.ChangeToIdleState();
+            m_controlsStateMachine.ResetAutoTimer();
         }
 
         public void SetBuffDuration(float newDuration)

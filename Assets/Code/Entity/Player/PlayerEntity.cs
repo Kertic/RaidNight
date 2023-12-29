@@ -1,7 +1,5 @@
-using System;
 using Code.Entity.Player.StateMachines;
 using Code.Entity.Player.Views;
-using Code.Entity.Player.Weapon;
 using UnityEngine;
 
 namespace Code.Entity.Player

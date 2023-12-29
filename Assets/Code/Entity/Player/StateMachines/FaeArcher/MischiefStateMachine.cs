@@ -61,7 +61,7 @@ namespace Code.Entity.Player.StateMachines.FaeArcher
         public void FireMischief(Entity targetEntity)
         {
             ChangeState(_MischiefAttacking);
-            TrackingProjectile projectile = mischiefWeapon.FireProjectile(targetEntity.transform, mischiefProjectileSpeed);
+            TrackingProjectile projectile = mischiefWeapon.FireProjectile(targetEntity, mischiefProjectileSpeed);
             projectile.m_onEntityHit += hit2Ds => { ChangeToReturning(hit2Ds[0].point); };
             m_onFiredTrackingProjectile?.Invoke(projectile);
         }

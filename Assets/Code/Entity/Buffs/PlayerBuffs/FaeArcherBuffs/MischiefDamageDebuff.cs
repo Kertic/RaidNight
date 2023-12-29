@@ -1,5 +1,3 @@
-using Code.Entity.Player;
-using Unity.Mathematics;
 using UnityEngine;
 
 namespace Code.Entity.Buffs.PlayerBuffs.FaeArcherBuffs
@@ -31,7 +29,7 @@ namespace Code.Entity.Buffs.PlayerBuffs.FaeArcherBuffs
             
             while (expectedTicks >= _elapsedTicks)
             {
-                m_entity.TakeDamage(_damagePerTick);
+                m_entity.TakeDamage(_damagePerTick, new Color(0.8f, 0.5f, 0.8f, 1.0f));
                 _elapsedTicks++;
             }
         }

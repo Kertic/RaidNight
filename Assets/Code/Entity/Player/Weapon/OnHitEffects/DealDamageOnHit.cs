@@ -1,4 +1,3 @@
-using UnityEditor.Tilemaps;
 using UnityEngine;
 
 namespace Code.Entity.Player.Weapon.OnHitEffects
@@ -15,7 +14,7 @@ namespace Code.Entity.Player.Weapon.OnHitEffects
         public override void ApplyEffectToEntity(Entity hitEntity)
         {
             base.ApplyEffectToEntity(hitEntity);
-            hitEntity.TakeDamage(_damage);
+            hitEntity.TakeDamage(_damage, new Color(0.8f, 0.72f, 0.016f, 1.0f));
         }
     }
 }

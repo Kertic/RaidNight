@@ -7,7 +7,6 @@ namespace Code.Entity.Player.StateMachines.FaeArcher.PlayerFaeArcherStates
     {
         private float _maxDashDistance;
         private float _dashDuration;
-        private PlayerControlsStateMachine.AttackHaltHandle _haltHandle;
 
         public Flit(PlayerData data, EntityPhysics entityPhysics, PlayerFaeArcherStateMachine controlsStateMachine, float maxDashDistance, float dashDuration, float cooldown) : base(data, entityPhysics, controlsStateMachine, cooldown)
         {
@@ -18,7 +17,6 @@ namespace Code.Entity.Player.StateMachines.FaeArcher.PlayerFaeArcherStates
         public override void OnStateEnter()
         {
             base.OnStateEnter();
-            _haltHandle = m_controlsStateMachine.HaltAutoAttacks();
             EntityPhysics.BurstForce force = new(
                 m_controlsStateMachine._MovementDirection == Vector2.zero ? (PlayerCam.mousePosition - (Vector2)m_entityPhysics.transform.position) : m_controlsStateMachine._MovementDirection,
                 _dashDuration);
@@ -29,7 +27,6 @@ namespace Code.Entity.Player.StateMachines.FaeArcher.PlayerFaeArcherStates
         public override void OnStateExit()
         {
             base.OnStateExit();
-            m_controlsStateMachine.ReleaseAutoAttackHaltHandle(_haltHandle);
             m_controlsStateMachine.AddWispCharge();
         }
 

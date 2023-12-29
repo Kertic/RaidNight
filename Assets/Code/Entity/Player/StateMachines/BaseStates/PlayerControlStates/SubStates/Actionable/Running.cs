@@ -4,23 +4,22 @@ namespace Code.Entity.Player.StateMachines.BaseStates.PlayerControlStates.SubSta
 {
     public class Running : SuperStates.Actionable
     {
-        private PlayerControlsStateMachine.AttackHaltHandle _haltHandle;
-
         protected Vector2 m_lastMovementVector;
+        private PlayerControlsStateMachine.AttackHaltHandle _handle;
         public Running(PlayerData data, EntityPhysics entityPhysics, PlayerControlsStateMachine controlsStateMachine) : base(data, entityPhysics, controlsStateMachine) { }
 
         public override void OnStateEnter()
         {
             base.OnStateEnter();
+            _handle = m_controlsStateMachine.HaltAutoAttacks();
             m_lastMovementVector = Vector2.zero;
-            _haltHandle = m_controlsStateMachine.HaltAutoAttacks();
         }
 
         public override void OnStateExit()
         {
             base.OnStateExit();
+            m_controlsStateMachine.ReleaseAutoAttackHaltHandle(_handle);
             m_entityPhysics.RemoveContinuousForce(m_lastMovementVector);
-            m_controlsStateMachine.ReleaseAutoAttackHaltHandle(_haltHandle);
         }
 
         public override void OnReceiveMovementInput(Vector2 direction)
